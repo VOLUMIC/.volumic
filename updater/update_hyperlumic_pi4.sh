@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo service klipper stop
 cd ~/klipper
 git pull
