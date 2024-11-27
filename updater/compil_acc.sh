@@ -1,2 +1,2 @@
-cd ~/klipper
-make KCONFIG_CONFIG=updater/config.acc
+cd ~/printer_data/config/.volumic/updater/
+make KCONFIG_CONFIG=config.acc

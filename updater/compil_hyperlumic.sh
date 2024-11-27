@@ -1,2 +1,2 @@
 cd ~/klipper
-make KCONFIG_CONFIG=updater/config.hyperlumic
+make KCONFIG_CONFIG=~/printer_data/config/.volumic/updater~/config.hyperlumic
