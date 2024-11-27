@@ -1,3 +1,3 @@
-cd ~/printer_data/config/.volumic/updater/
-make clean KCONFIG_CONFIG=config.supralumic
-make menuconfig KCONFIG_CONFIG=config.supralumic
+cd ~/klipper
+make clean KCONFIG_CONFIG=~/printer_data/config/.volumic/updater/config.supralumic
+make menuconfig KCONFIG_CONFIG=~/printer_data/config/.volumic/updater/config.supralumic
