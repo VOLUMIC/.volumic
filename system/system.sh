@@ -1,8 +1,19 @@
 #!/bin/bash
 
-# Make updater scripts executable
-cd /home/Volumic/printer_data/config/.volumic/updater/
-sudo chmod +x *.sh
+# Check VyperOS dir
+cd /home/Volumic
+if [ ! -d "VyperOS" ]; then
+	mkdir VyperOS
+	sudo chmod -R -v 776 SecureMemory
+fi
+# Update VyperOS updates scripts
+cd /home/Volumic/VyperOS
+if [ ! -d "updater" ]; then
+	mkdir updater
+	sudo chmod -R -v 776 SecureMemory
+fi
+cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
+sudo chmod +x updater/*.sh
 
 # Update Mainsail images
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
@@ -13,9 +24,11 @@ sudo cp /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/
 sudo cp /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
 sudo cp /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
 
-# Reinitialize Volumic boot logo (after a system update for exemple)
-#cd /home/Volumic/printer_data/config/.volumic/system/
-#sudo cp watermark.png /usr/share/plymouth/themes/armbian/
-#sudo plymouth-set-default-theme -R armbian
-#sudo sed -i '/^sudo cp watermark.png \/usr\/share\/plymouth\/themes\/armbian\//s/^/#/' system.sh
-#sudo sed -i '/^sudo plymouth-set-default-theme -R armbian/s/^/#/' system.sh
+# One time system update
+cd /home/Volumic/VyperOS
+if [ ! -d "sys1" ]; then
+	mkdir sys1
+	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh
+	sudo chmod +x vyperos_update.sh
+	./vyperos_update.sh
+fi

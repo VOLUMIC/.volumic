@@ -13,7 +13,7 @@
 
 
 cd ~/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.hyperlumic
-make KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.hyperlumic
+make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 cd ~/klipper/lib/hidflash
 ./hid-flash ~/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0

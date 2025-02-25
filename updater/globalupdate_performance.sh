@@ -28,25 +28,16 @@ git pull
 
 # Update accelerometer MCU
 cd /home/Volumic/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 # Update MCU
 cd /home/Volumic/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.hyperlumic
-make KCONFIG_CONFIG=/home/Volumic/printer_data/config/.volumic/updater/config.hyperlumic
+make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 cd /home/Volumic/klipper/lib/hidflash
 ./hid-flash ~/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-
-# Make updater scripts executable
-cd /home/Volumic/printer_data/config/.volumic/updater/
-sudo chmod +x *.sh
-
-# Update Mainsail images
-sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
-sudo cp /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
-sudo cp /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
 
 # Update system
 sudo apt update
