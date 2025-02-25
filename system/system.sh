@@ -9,6 +9,10 @@ sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Vo
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
 
+# Update configs
+sudo cp /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
+sudo cp /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+
 # Reinitialize Volumic boot logo (after a system update for exemple)
 #cd /home/Volumic/printer_data/config/.volumic/system/
 #sudo cp watermark.png /usr/share/plymouth/themes/armbian/

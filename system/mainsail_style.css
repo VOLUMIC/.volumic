@@ -1,0 +1,37 @@
+/* VOLUMIC CUSTOM CSS */
+.v-application .warning {
+  background-color: #0086db !important;
+  border-color: #0086db !important;
+}
+.theme--dark.v-card {
+	background:rgba(30,30,30,0.9);
+}
+.theme--dark.v-toolbar.v-sheet,.theme--dark.v-sheet,.theme--dark.v-data-table,.theme--dark.v-tabs > .v-tabs-bar {
+	background:rgba(39,39,39,0.8);
+}
+.v-card.panel .v-toolbar__content {
+	border-bottom:solid 1px #667f00;
+}
+.v-navigation-drawer__image {
+	border-right: 1px solid #667f00;
+}
+.topbar .v-toolbar__content {
+	border-bottom: 1px solid #667f00;
+}
+.gcode-files-panel  .v-card__text {
+	font-size:1.7rem;
+	color: #C6FF00;
+}
+.consoleTableRow.default .col[data-v-54d4632f] {
+	padding:0 6px 0 6px  !important;
+	font-size:.75em;
+	font-weight:normal;
+}
+.v-sheet.v-card {
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+}
+.file-list-cursor {
+  white-space: nowrap;
+}
+.subtitle-2.px-0.text--disabled:not(.d-block) {color:#c4ff00 !important;font-size:1.1rem !important}
