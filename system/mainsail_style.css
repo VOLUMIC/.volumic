@@ -35,3 +35,7 @@
   white-space: nowrap;
 }
 .subtitle-2.px-0.text--disabled:not(.d-block) {color:#c4ff00 !important;font-size:1.1rem !important}
+.v-application .my-1 {width:48%;}
+.v-btn:not(.v-btn--outlined).primary {width:100%}
+.macroWithParameters {width:90% !important}
+.btnMacroMenu {width:10% !important}
