@@ -1,17 +1,34 @@
 #!/bin/bash
 
-# Make updater scripts executable
-cd /home/Volumic/printer_data/config/.volumic/updater/
-sudo chmod +x *.sh
+# Check VyperOS dir
+cd /home/Volumic
+if [ ! -d "VyperOS" ]; then
+	mkdir VyperOS
+	sudo chmod -R -v 776 SecureMemory
+fi
+# Update VyperOS updates scripts
+cd /home/Volumic/VyperOS
+if [ ! -d "updater" ]; then
+	mkdir updater
+	sudo chmod -R -v 776 SecureMemory
+fi
+cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
+sudo chmod +x updater/*.sh
 
 # Update Mainsail images
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
 
-# Reinitialize Volumic boot logo (after a system update for exemple)
-cd /home/Volumic/printer_data/config/.volumic/system/
-#sudo cp bootsplash.armbian /usr/lib/firmware/bootsplash.armbian
-#sudo update-initramfs -v -u
-sudo sed -i '/^sudo cp bootsplash.armbian \/usr\/lib\/firmware\/bootsplash.armbian/s/^/#/' system.sh
-sudo sed -i '/^sudo update-initramfs -v -u/s/^/#/' system.sh
+# Update configs
+sudo cp /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
+sudo cp /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+
+# One time system update
+cd /home/Volumic/VyperOS
+if [ ! -d "sys1" ]; then
+	mkdir sys1
+	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
+	sudo chmod +x vyperos_s2update.sh
+	./vyperos_s2update.sh
+fi
