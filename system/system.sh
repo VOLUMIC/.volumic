@@ -26,10 +26,11 @@ sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css 
 
 # One time system update
 cd /home/Volumic/VyperOS
+cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
+sudo chmod +x *.sh
 if [ ! -d "sys1" ]; then
 	mkdir sys1
 	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
 	sudo chmod +x *.sh
 	./system_update.sh > lastsysupdate.log
 fi

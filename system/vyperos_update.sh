@@ -35,4 +35,10 @@ make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 cd /home/Volumic/klipper/lib/hidflash
 ./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 
+# Force system update after boot
+cd /home/Volumic/VyperOS
+if [ -d "sys1" ]; then
+	rmdir sys1
+fi
+
 shutdown -h 0
