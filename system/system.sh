@@ -33,4 +33,9 @@ if [ ! -d "sys1" ]; then
 	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
 	sudo chmod +x *.sh
 	./system_update.sh > lastsysupdate.log
+	# Update accelerometer MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 fi
