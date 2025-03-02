@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # STOP klipper
 sudo service klipper stop
 
@@ -37,10 +39,11 @@ cd /home/Volumic/klipper
 make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 cd /home/Volumic/klipper/lib/hidflash
-./hid-flash ~/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 
 # Update system
 sudo apt update
+sudo apt upgrade
 
 # Update system logo
 cd /home/Volumic/printer_data/config/.volumic/system/
