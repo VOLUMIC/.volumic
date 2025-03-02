@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# STOP klipper
-sudo service klipper stop
-
-# STOP KlipperScreen
-sudo service KlipperScreen stop
-
 # Update klipper
 cd /home/Volumic/klipper
 git pull
