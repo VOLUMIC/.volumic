@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Update system
-sudo apt update
-sudo apt upgrade
+sudo apt update && sudo apt upgrade -y
 
 cd /home/Volumic/printer_data/config/.volumic/system/
 sudo cp -f watermark.png /usr/share/plymouth/themes/armbian/
