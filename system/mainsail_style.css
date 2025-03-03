@@ -39,3 +39,4 @@
 .v-btn:not(.v-btn--outlined):not(.v-btn--outlined).v-size--small.primary {width:100%}
 .macroWithParameters {width:90% !important}
 .btnMacroMenu {width:10% !important}
+.machine-update-panel {display:none;)
