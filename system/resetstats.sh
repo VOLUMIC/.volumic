@@ -3,6 +3,12 @@
 # delete logs files
 rm -f /home/Volumic/printer_data/logs/*.*
 
+# delete Moonraker backup
+rm -f /home/Volumic/printer_data/config/.moonraker.conf.bkp
+
+# delete klipper backup
+rm -f /home/Volumic/printer_data/config/printer-*.cfg
+
 # delete cmd line history
 rm -f /home/Volumic/.bash_history
 
