@@ -14,7 +14,7 @@ git pull
 
 # Update mainsail
 cd /home/Volumic/mainsail
-rm -R ./*
+rm -R -f ./*
 rm .version
 wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
 
