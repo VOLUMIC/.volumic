@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo service klipper stop
+
 # Update klipper
 cd /home/Volumic/klipper
 git pull
