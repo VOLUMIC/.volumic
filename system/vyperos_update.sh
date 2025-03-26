@@ -41,4 +41,5 @@ if [ -d "sys1" ]; then
 	rmdir sys1
 fi
 
-reboot
+shutdown -h 0
+#reboot
