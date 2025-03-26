@@ -27,13 +27,13 @@ git pull
 # Update accelerometer MCU
 cd /home/Volumic/klipper
 make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.4:1.0
+#make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.4:1.0
 
 # Update MCU
 cd /home/Volumic/klipper
 make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+#make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.3:1.0
 
 # Force system update after boot
