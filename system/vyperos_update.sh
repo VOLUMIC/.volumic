@@ -10,6 +10,8 @@ git pull
 
 # Update KlipperScreen
 cd /home/Volumic/KlipperScreen
+#git reset --hard
+#git clean -fd
 git pull
 
 # Update mainsail
