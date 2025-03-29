@@ -8,10 +8,14 @@ git pull
 
 # Update configurations
 cd /home/Volumic/printer_data/config/.volumic
+git reset --hard
+git clean -fd
 git pull
 
 # Update KlipperScreen
 cd /home/Volumic/KlipperScreen
+git reset --hard
+git clean -fd
 git pull
 
 # Update mainsail
