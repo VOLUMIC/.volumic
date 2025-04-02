@@ -1,14 +1,18 @@
 #!/bin/bash
 
-# Update klipper
-cd /home/Volumic/klipper
-git pull
-
 # Update configurations
 cd /home/Volumic/printer_data/config/.volumic
 git reset --hard
 git clean -fd
 git pull
+
+# Update USB Loader
+cd /home/Volumic/Moonraker-loader/
+git reset --hard
+git clean -fd
+git pull
+sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
+sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
 
 # Update KlipperScreen
 cd /home/Volumic/KlipperScreen
@@ -21,6 +25,10 @@ cd /home/Volumic/mainsail
 rm -R -f ./*
 rm .version
 wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
+
+# Update klipper
+cd /home/Volumic/klipper
+git pull
 
 # Update Moonraker
 cd /home/Volumic/moonraker
