@@ -3,6 +3,8 @@
 ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
 if [ $? -eq 0 ]; then	# internet connected
 
+	echo "Internet update"
+
 	# Update configurations
 	cd /home/Volumic/printer_data/config/.volumic
 	git reset --hard
@@ -57,6 +59,8 @@ if [ $? -eq 0 ]; then	# internet connected
 	fi
 
 else	# no internet connexion
+
+	echo "Local update"
 
 	# Update USB Loader
 	sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
