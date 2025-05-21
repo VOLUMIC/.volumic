@@ -1,50 +1,76 @@
 #!/bin/bash
 
-sudo service klipper stop
+ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
+if [ $? -eq 0 ]; then	# internet connected
 
-# Update klipper
-cd /home/Volumic/klipper
-git pull
+	echo "Internet update"
 
-# Update configurations
-cd /home/Volumic/printer_data/config/.volumic
-git reset --hard
-git clean -fd
-git pull
+	sudo service klipper stop
 
-# Update KlipperScreen
-cd /home/Volumic/KlipperScreen
-git reset --hard
-git clean -fd
-git pull
+	# Update configurations
+	cd /home/Volumic/printer_data/config/.volumic
+	git reset --hard
+	git clean -fd
+	git pull
 
-# Update mainsail
-cd /home/Volumic/mainsail
-rm -R -f ./*
-rm .version
-wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
+	# Update klipper
+	cd /home/Volumic/klipper
+	git pull
 
-# Update Moonraker
-cd /home/Volumic/moonraker
-git pull
+	# Update KlipperScreen
+	cd /home/Volumic/KlipperScreen
+	git reset --hard
+	git clean -fd
+	git pull
 
-# Update accelerometer MCU
-cd /home/Volumic/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.4:1.0
+	# Update mainsail
+	cd /home/Volumic/mainsail
+	rm -R -f ./*
+	rm .version
+	wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
 
-# Update MCU
-cd /home/Volumic/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.3:1.0
+	# Update Moonraker
+	cd /home/Volumic/moonraker
+	git pull
 
-# Force system update after boot
-cd /home/Volumic/VyperOS
-if [ -d "sys1" ]; then
-	rmdir sys1
-fi
+	# Update accelerometer MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.4:1.0
 
-shutdown -h 0
-#reboot
+	# Update MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.3:1.0
+
+	# Force system update after boot
+	cd /home/Volumic/VyperOS
+	if [ -d "sys1" ]; then
+		rmdir sys1
+	fi
+
+
+else	# no internet connexion
+
+	echo "Local update"
+
+	sudo service klipper stop
+
+	# Update accelerometer MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.4:1.0
+
+	# Update MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-5200000.usb-usb-0:1.3:1.0
+
+fi 
+
+#shutdown -h 0
+reboot
