@@ -15,6 +15,8 @@ fi
 cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 sudo chmod +x updater/*.sh
 
+sudo chmod 666 /home/Volumic/printer_data/database/moonraker-sql.db
+
 # One time system update
 cd /home/Volumic/VyperOS
 cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
