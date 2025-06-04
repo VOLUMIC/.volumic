@@ -54,6 +54,11 @@ if [ $? -eq 0 ]; then	# internet connected
 
 	# Force system update after boot
 	cd /home/Volumic/VyperOS
+	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
+	sudo chmod +x updater/*.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
+	sudo chmod +x *.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
 	if [ -d "sys1" ]; then
 		rmdir sys1
 	fi
