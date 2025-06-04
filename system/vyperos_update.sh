@@ -5,6 +5,8 @@ if [ $? -eq 0 ]; then	# internet connected
 
 	echo "Internet update"
 
+	sudo service klipper stop
+
 	# Update configurations
 	cd /home/Volumic/printer_data/config/.volumic
 	git reset --hard
@@ -66,6 +68,8 @@ if [ $? -eq 0 ]; then	# internet connected
 else	# no internet connexion
 
 	echo "Local update"
+
+	sudo service klipper stop
 
 	# Update USB Loader
 	sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
