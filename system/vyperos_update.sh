@@ -12,6 +12,12 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
+	cd /home/Volumic/VyperOS
+	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
+	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
+	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
+	sudo chmod 776 updater/*.sh
+	sudo chmod 776 *.sh
 
 	# Update USB Loader
 	cd /home/Volumic/Moonraker-loader/
@@ -56,11 +62,6 @@ if [ $? -eq 0 ]; then	# internet connected
 
 	# Force system update after boot
 	cd /home/Volumic/VyperOS
-	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
-	sudo chmod +x updater/*.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
-	sudo chmod +x *.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
 	if [ -d "sys1" ]; then
 		rmdir sys1
 	fi
