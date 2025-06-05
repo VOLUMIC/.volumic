@@ -100,5 +100,5 @@ sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volum
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
 
-#shutdown -h 0
-reboot
+shutdown -h 0
+#reboot
