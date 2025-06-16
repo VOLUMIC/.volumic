@@ -17,10 +17,11 @@ sudo chmod +x updater/*.sh
 
 sudo chmod 666 /home/Volumic/printer_data/database/moonraker-sql.db
 
-# One time system update
 cd /home/Volumic/VyperOS
 cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_pelletsupdate.sh /home/Volumic/VyperOS/vyperos_update.sh
 sudo chmod +x *.sh
+
+# One time system update
 if [ ! -d "sys1" ]; then
 	mkdir sys1
 	cp -f /home/Volumic/printer_data/config/.volumic/system/systems2_update.sh /home/Volumic/VyperOS
