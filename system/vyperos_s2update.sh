@@ -12,6 +12,12 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
+	cd /home/Volumic/VyperOS
+	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
+	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_s2update.sh /home/Volumic/VyperOS/vyperos_update.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/systems2_update.sh /home/Volumic/VyperOS
+	sudo chmod 776 updater/*.sh
+	sudo chmod 776 *.sh
 
 	# Update klipper
 	cd /home/Volumic/klipper
