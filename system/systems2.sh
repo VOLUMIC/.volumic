@@ -14,6 +14,8 @@ if [ ! -d "updater" ]; then
 fi
 cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 sudo chmod +x updater/*.sh
+sudo sed -i '/^sudo chmod +x/s/^/#/' /etc/scripts/init.sh
+sudo sed -i '/^.\/systems2.sh/s/^/sh /' /etc/scripts/init.sh
 
 # Update Mainsail images
 sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
