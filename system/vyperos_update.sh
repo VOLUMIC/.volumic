@@ -47,6 +47,10 @@ if [ $? -eq 0 ]; then	# internet connected
 	cd /home/Volumic/moonraker
 	git pull
 
+	# Update Obico
+	cd /home/Volumic/moonraker-obico/
+	git pull
+
 	# Update accelerometer MCU
 	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
@@ -54,11 +58,19 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-	cd /home/Volumic/klipper
-	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-	cd /home/Volumic/klipper/lib/hidflash
-	./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	cd /home/Volumic/VyperOS
+	if [ -d "SAM3X8E" ]; then
+		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	else
+		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+		cd /home/Volumic/klipper/lib/hidflash
+		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	fi
 
 	# Force system update after boot
 	cd /home/Volumic/VyperOS
@@ -83,11 +95,19 @@ else	# no internet connexion
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-	cd /home/Volumic/klipper
-	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-	cd /home/Volumic/klipper/lib/hidflash
-	./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	cd /home/Volumic/VyperOS
+	if [ -d "SAM3X8E" ]; then
+		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	else
+		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+		cd /home/Volumic/klipper/lib/hidflash
+		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	fi
 
 fi 
 
