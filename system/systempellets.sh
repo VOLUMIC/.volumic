@@ -14,14 +14,22 @@ if [ ! -d "updater" ]; then
 fi
 cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 sudo chmod +x updater/*.sh
+sudo sed -i '/^sudo chmod +x/s/^/#/' /etc/scripts/init.sh
+sudo sed -i '/^.\/systems2.sh/s/^/sh /' /etc/scripts/init.sh
 
-sudo chmod 666 /home/Volumic/printer_data/database/moonraker-sql.db
+# Update Mainsail images
+sudo cp /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
+sudo cp /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
+sudo cp /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
 
+# Update configs
+sudo cp /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
+sudo cp /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+
+# One time system update
 cd /home/Volumic/VyperOS
 cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_pelletsupdate.sh /home/Volumic/VyperOS/vyperos_update.sh
 sudo chmod +x *.sh
-
-# One time system update
 if [ ! -d "sys1" ]; then
 	mkdir sys1
 	cp -f /home/Volumic/printer_data/config/.volumic/system/systems2_update.sh /home/Volumic/VyperOS
