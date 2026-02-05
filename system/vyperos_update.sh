@@ -117,7 +117,7 @@ else	# no internet connexion
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
-fi 
+fi
 
 # Update Mainsail images
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
