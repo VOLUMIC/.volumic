@@ -108,9 +108,9 @@ else	# no internet connexion
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	elif  [ -d "STM32H723M8" ]; then
 		cd /home/Volumic/klipper
-		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-		make flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
