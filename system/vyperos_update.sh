@@ -131,8 +131,6 @@ sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css 
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
-elif [ -d "STM32H723M8" ]; then
-	reboot
 else
 	shutdown -h 0
 fi
