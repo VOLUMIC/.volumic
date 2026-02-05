@@ -4,7 +4,6 @@ ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
 if [ $? -eq 0 ]; then	# internet connected
 
 	echo "Internet update"
-
 	sudo service klipper stop
 
 	# Update configurations
@@ -86,7 +85,6 @@ if [ $? -eq 0 ]; then	# internet connected
 else	# no internet connexion
 
 	echo "Local update"
-
 	sudo service klipper stop
 
 	# Update USB Loader
