@@ -63,7 +63,7 @@ if [ $? -eq 0 ]; then	# internet connected
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-	elif  [ -d "STM32H723M8" ]; then
+	elif [ -d "STM32H723M8" ]; then
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
@@ -104,7 +104,7 @@ else	# no internet connexion
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-	elif  [ -d "STM32H723M8" ]; then
+	elif [ -d "STM32H723M8" ]; then
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
