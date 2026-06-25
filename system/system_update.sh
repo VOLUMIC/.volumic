@@ -8,7 +8,8 @@ sudo cp -f sources.list /etc/apt/
 sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 
 # misc tasks
-sudo mv Moonraker-loader Moonraker-loader.old
+cd /home/Volumic/
+sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 
 # Update system
