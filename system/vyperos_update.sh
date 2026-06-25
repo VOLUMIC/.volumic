@@ -23,6 +23,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo chmod 776 updater/*.sh
 	sudo chmod 776 *.sh
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
+	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 
 	# Update USB Loader
 	#cd /home/Volumic/Moonraker-loader/
