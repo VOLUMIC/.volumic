@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# update backport repository with archive (end of support on 2024)
-#sudo sed -i 's/deb.debian.org\/debian bullseye-backports/archive.debian.org\/debian bullseye-backports/' /etc/apt/sources.list
-
 cd /home/Volumic/printer_data/config/.volumic/system/
 # update repository list
 sudo cp -f sources.list /etc/apt/
+
+# update sudo rights
+sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 
 # Update system
 sudo apt update
