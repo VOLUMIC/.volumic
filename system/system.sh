@@ -12,9 +12,9 @@ if [ ! -d "updater" ]; then
 	mkdir updater
 	sudo chmod -R -v 776 SecureMemory
 fi
+
 cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 sudo chmod +x updater/*.sh
-
 sudo chmod 666 /home/Volumic/printer_data/database/moonraker-sql.db
 
 # One time system update

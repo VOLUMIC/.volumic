@@ -15,8 +15,12 @@ if [ $? -eq 0 ]; then	# internet connected
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
+	cp -f /home/Volumic/printer_data/config/.volumic/system/copyusb.sh /home/Volumic/VyperOS
+	cp -f /home/Volumic/printer_data/config/.volumic/system/unmountusb.sh /home/Volumic/VyperOS/unmountusb.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/mountusb.sh /home/Volumic/VyperOS/mountusb.sh
 	sudo chmod 776 updater/*.sh
 	sudo chmod 776 *.sh
+	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 
 	# Update USB Loader
 	cd /home/Volumic/Moonraker-loader/
@@ -74,6 +78,7 @@ if [ $? -eq 0 ]; then	# internet connected
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
 	# Force system update after boot

@@ -1,0 +1,1 @@
+ACTION=="remove", ATTRS{idVendor}=="346d", ATTRS{idProduct}=="5678", RUN+="/home/Volumic/VyperOS/unmountusb.sh"
