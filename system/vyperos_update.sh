@@ -25,12 +25,12 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 
 	# Update USB Loader
-	cd /home/Volumic/Moonraker-loader/
-	git reset --hard
-	git clean -fd
-	git pull
-	sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
-	sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
+	#cd /home/Volumic/Moonraker-loader/
+	#git reset --hard
+	#git clean -fd
+	#git pull
+	#sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
+	#sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
 
 	# Update KlipperScreen
 	cd /home/Volumic/KlipperScreen

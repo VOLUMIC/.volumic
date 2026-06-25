@@ -6,6 +6,7 @@ sudo cp -f sources.list /etc/apt/
 
 # update sudo rights
 sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
+mv Moonraker-loader Moonraker-loader.old
 
 # Update system
 sudo apt update
