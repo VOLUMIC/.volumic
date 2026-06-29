@@ -7,3 +7,5 @@ Volumic ALL=(ALL) NOPASSWD:/usr/bin/chmod
 Volumic ALL=(ALL) NOPASSWD: /bin/mount
 Volumic ALL=(ALL) NOPASSWD: /bin/umount
 Volumic ALL=(ALL) NOPASSWD:/home/Volumic/klipper/lib/bossac/bin/bossac
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/network/interfaces
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/tee /etc/network/interfaces.default

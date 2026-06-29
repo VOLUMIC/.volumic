@@ -16,5 +16,5 @@ cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home
 sudo apt update
 sudo apt upgrade -y
 
-sudo cp -f watermark.png /usr/share/plymouth/themes/armbian/
+sudo cp -f /home/Volumic/printer_data/config/.volumic/system/watermark.png /usr/share/plymouth/themes/armbian/
 sudo plymouth-set-default-theme -R armbian
