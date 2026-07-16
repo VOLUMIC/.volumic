@@ -131,7 +131,7 @@ else
 	sudo plymouth quit --retain-splash 2>/dev/null || true
 	sudo sh -c 'echo "" > /dev/tty1'
 	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'  # efface l ecran
+	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'
 	sudo sh -c 'echo "" > /dev/tty1'
 	sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
 	sudo sh -c 'echo " " > /dev/tty1'
