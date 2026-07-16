@@ -1,26 +1,31 @@
 #!/bin/bash
 
-# Arret KlipperScreen en premier
+# Arret KlipperScreen
 sudo systemctl stop KlipperScreen 2>/dev/null || true
 sleep 1
 
-# Quitter Plymouth completement pour liberer le framebuffer (sans --retain-splash)
+# Quitter Plymouth completement
 sudo plymouth quit 2>/dev/null || true
 sleep 1
 
-# Basculer sur tty1 - apres l'arret de X11, Armbian revient toujours sur tty1
+# Basculer sur tty1
 sudo chvt 1 2>/dev/null || true
+sleep 1
+
+# Arreter getty sur tty1 pour liberer le prompt login:
+sudo systemctl stop getty@tty1.service 2>/dev/null || true
 sleep 1
 
 TTY_DEV="/dev/tty1"
 
-# Fonctions d'affichage
+# Ecriture directe - le script tourne en root via sudo bash
 tty_echo() {
-    sudo sh -c "echo \"$1\" > $TTY_DEV"
+    echo "$1" > $TTY_DEV
 }
 tty_clear() {
-    sudo sh -c "printf '\033[2J\033[H' > $TTY_DEV"
+    printf '\033[2J\033[H' > $TTY_DEV
 }
+
 tty_echo ""
 tty_echo ""
 tty_clear
