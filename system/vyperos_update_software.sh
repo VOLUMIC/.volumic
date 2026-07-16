@@ -6,11 +6,11 @@ sleep 1
 
 # Quitter Plymouth completement
 sudo plymouth quit 2>/dev/null || true
-sleep 1
+#sleep 1
 
 # Basculer sur tty3 - libre sur Armbian (getty uniquement sur tty1 et tty2)
 sudo chvt 3
-sleep 1
+#sleep 1
 
 TTY_DEV="/dev/tty3"
 

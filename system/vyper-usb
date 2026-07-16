@@ -16,3 +16,4 @@ Volumic ALL=(ALL) NOPASSWD: /bin/systemctl start KlipperScreen
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/fgconsole
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/chvt
 Volumic ALL=(ALL) NOPASSWD: /bin/plymouth
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/rm
