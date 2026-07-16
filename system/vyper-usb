@@ -6,6 +6,7 @@ Volumic ALL=(ALL) NOPASSWD:/usr/bin/ping
 Volumic ALL=(ALL) NOPASSWD:/usr/sbin/service
 Volumic ALL=(ALL) NOPASSWD:/usr/bin/ln
 Volumic ALL=(ALL) NOPASSWD:/usr/bin/chmod
+Volumic ALL=(ALL) NOPASSWD:/usr/bin/cp
 Volumic ALL=(ALL) NOPASSWD: /bin/mount
 Volumic ALL=(ALL) NOPASSWD: /bin/umount
 Volumic ALL=(ALL) NOPASSWD:/home/Volumic/klipper/lib/bossac/bin/bossac
