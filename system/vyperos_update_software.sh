@@ -1,59 +1,76 @@
 #!/bin/bash
 
+# Detection du TTY actif sur l'ecran physique
+# Fonctionne que le script soit lance depuis SSH, console ou KlipperScreen
+TTY_ACTIVE=$(sudo fgconsole 2>/dev/null)
+if [ -z "$TTY_ACTIVE" ] || ! [ "$TTY_ACTIVE" -eq "$TTY_ACTIVE" ] 2>/dev/null; then
+    TTY_ACTIVE=1
+fi
+TTY_DEV="/dev/tty${TTY_ACTIVE}"
+
+# Fonction d'affichage sur le TTY actif
+tty_echo() {
+    sudo sh -c "echo \"$1\" > $TTY_DEV"
+}
+tty_clear() {
+    sudo sh -c "printf '\033[2J\033[H' > $TTY_DEV"
+}
+
 sudo systemctl stop KlipperScreen 2>/dev/null || true
+sudo chvt $TTY_ACTIVE 2>/dev/null || true
 sudo plymouth quit --retain-splash 2>/dev/null || true
-sudo sh -c 'echo "" > /dev/tty1'
-sudo sh -c 'echo "" > /dev/tty1'
-sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'
-sudo sh -c 'echo "" > /dev/tty1'
-sudo sh -c 'echo "   MISE A JOUR VOLUMIC, VEUILLEZ PATIENTER..." > /dev/tty1'
-sudo sh -c 'echo " " > /dev/tty1'
+tty_echo ""
+tty_echo ""
+tty_clear
+tty_echo ""
+tty_echo "   MISE A JOUR VOLUMIC, VEUILLEZ PATIENTER..."
+tty_echo " "
 
 ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
 
 if [ $? -eq 0 ]; then	# internet connected
 
-  sudo sh -c 'echo "-> Mise a jour Internet, arret des services VyperOS" > /dev/tty1'
+  tty_echo "-> Mise a jour Internet, arret des services VyperOS"
 	sudo service klipper stop
 
 	# Update KlipperScreen
-  sudo sh -c 'echo "-> Mise a jour Affichage" > /dev/tty1'
+  tty_echo "-> Mise a jour Affichage"
 	cd /home/Volumic/KlipperScreen
 	git reset --hard
 	git clean -fd
 	git pull
 
 	# Update mainsail
-  sudo sh -c 'echo "-> Mise a jour serveur Web" > /dev/tty1'
+  tty_echo "-> Mise a jour serveur Web"
 	cd /home/Volumic/mainsail
 	rm -R -f ./*
 	rm .version
 	wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
 
 	# Update klipper
-  sudo sh -c 'echo "-> Mise a jour noyau" > /dev/tty1'
+  tty_echo "-> Mise a jour noyau"
 	cd /home/Volumic/klipper
 	git pull
 
 	# Update Moonraker
-  sudo sh -c 'echo "-> Mise a jour API" > /dev/tty1'
+  tty_echo "-> Mise a jour API"
 	cd /home/Volumic/moonraker
 	git pull
 
 	# Update Obico
-  sudo sh -c 'echo "-> Mise a jour IA" > /dev/tty1'
+  tty_echo "-> Mise a jour IA"
 	cd /home/Volumic/moonraker-obico/
 	git pull
 
 	# Update accelerometer MCU
-  sudo sh -c 'echo "-> Mise a jour firmware accelerometre" > /dev/tty1'
+  tty_echo "-> Mise a jour firmware accelerometre"
 	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-  sudo sh -c 'echo "-> Mise a jour firmware MCU" > /dev/tty1'
+  tty_echo "-> Mise a jour firmware MCU"
 	cd /home/Volumic/VyperOS
 	if [ -d "SAM3X8E" ]; then
 		cd /home/Volumic/klipper
@@ -75,7 +92,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	fi
 
 	# Force system update after boot
-  sudo sh -c 'echo "-> Mise a jour systeme" > /dev/tty1'
+  tty_echo "-> Mise a jour systeme"
 	cd /home/Volumic/VyperOS
 	if [ -d "sys1" ]; then
 		rmdir sys1
@@ -83,19 +100,19 @@ if [ $? -eq 0 ]; then	# internet connected
 
 else	# no internet connexion
 
-  sudo sh -c 'echo "-> Mise a jour locale (firmware only)" > /dev/tty1'
-  sudo sh -c 'echo "-> Arret des services" > /dev/tty1'
+  tty_echo "-> Mise a jour locale (firmware only)"
+  tty_echo "-> Arret des services"
 	sudo service klipper stop
 
 	# Update accelerometer MCU
-  sudo sh -c 'echo "-> Mise a jour accelerometre" > /dev/tty1'
+  tty_echo "-> Mise a jour accelerometre"
 	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-  sudo sh -c 'echo "-> Mise a jour MCU" > /dev/tty1'
+  tty_echo "-> Mise a jour MCU"
 	cd /home/Volumic/VyperOS
 	if [ -d "SAM3X8E" ]; then
 		cd /home/Volumic/klipper
@@ -127,16 +144,16 @@ cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
 else
-	sudo systemctl stop KlipperScreen 2>/dev/null || true
-	sudo plymouth quit --retain-splash 2>/dev/null || true
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
-	sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
+	#sudo systemctl stop KlipperScreen 2>/dev/null || true
+	#sudo plymouth quit --retain-splash 2>/dev/null || true
+	tty_echo ""
+	tty_echo ""
+	tty_clear
+	tty_echo ""
+	tty_echo "   MISE A JOUR INTERNET TERMINEE"
+	tty_echo " "
+	tty_echo "   Veuillez eteindre la machine electriquement"
+	tty_echo "   puis rallumez-la pour finaliser la mise a jour..."
+	tty_echo ""
 	#sudo shutdown -h 0
 fi
