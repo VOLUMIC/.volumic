@@ -6,15 +6,13 @@ sudo cp -f sources.list /etc/apt/
 
 # update sudo rights
 sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
+#echo "Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/resetnetwork.sh" | sudo tee /etc/sudoers.d/vyper-resetnetwork > /dev/null
+sudo chmod 440 /etc/sudoers.d/vyper-usb
 
 # misc tasks
 cd /home/Volumic/
 sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-
-# Dans vyperos_update.sh, ajouter cette ligne
-echo "Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/resetnetwork.sh" | sudo tee /etc/sudoers.d/vyper-resetnetwork > /dev/null
-sudo chmod 440 /etc/sudoers.d/vyper-resetnetwork
 
 # Update system
 sudo apt update

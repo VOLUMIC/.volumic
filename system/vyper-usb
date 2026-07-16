@@ -1,4 +1,6 @@
 Volumic ALL=(ALL) NOPASSWD:/home/Volumic/VyperOS/vyperos_update.sh
+Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/resetnetwork.sh
+Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/vyperos_update_software.sh
 Volumic ALL=(ALL) NOPASSWD:/usr/bin/make
 Volumic ALL=(ALL) NOPASSWD:/usr/bin/ping
 Volumic ALL=(ALL) NOPASSWD:/usr/sbin/service
