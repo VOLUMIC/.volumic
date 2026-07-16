@@ -19,6 +19,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	cp -f /home/Volumic/printer_data/config/.volumic/system/copyusb.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/unmountusb.sh /home/Volumic/VyperOS/unmountusb.sh
 	cp -f /home/Volumic/printer_data/config/.volumic/system/mountusb.sh /home/Volumic/VyperOS/mountusb.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/resetnetwork.sh /home/Volumic/VyperOS/resetnetwork.sh
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	sudo chmod 776 updater/*.sh
 	sudo chmod 776 *.sh
