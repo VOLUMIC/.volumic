@@ -1,24 +1,26 @@
 #!/bin/bash
 
-# Detection du TTY actif sur l'ecran physique
-# Fonctionne que le script soit lance depuis SSH, console ou KlipperScreen
-TTY_ACTIVE=$(sudo fgconsole 2>/dev/null)
-if [ -z "$TTY_ACTIVE" ] || ! [ "$TTY_ACTIVE" -eq "$TTY_ACTIVE" ] 2>/dev/null; then
-    TTY_ACTIVE=1
-fi
-TTY_DEV="/dev/tty${TTY_ACTIVE}"
+# Arret KlipperScreen en premier
+sudo systemctl stop KlipperScreen 2>/dev/null || true
+sleep 1
 
-# Fonction d'affichage sur le TTY actif
+# Quitter Plymouth completement pour liberer le framebuffer (sans --retain-splash)
+sudo plymouth quit 2>/dev/null || true
+sleep 1
+
+# Basculer sur tty1 - apres l'arret de X11, Armbian revient toujours sur tty1
+sudo chvt 1 2>/dev/null || true
+sleep 1
+
+TTY_DEV="/dev/tty1"
+
+# Fonctions d'affichage
 tty_echo() {
     sudo sh -c "echo \"$1\" > $TTY_DEV"
 }
 tty_clear() {
     sudo sh -c "printf '\033[2J\033[H' > $TTY_DEV"
 }
-
-sudo systemctl stop KlipperScreen 2>/dev/null || true
-sudo chvt $TTY_ACTIVE 2>/dev/null || true
-sudo plymouth quit --retain-splash 2>/dev/null || true
 tty_echo ""
 tty_echo ""
 tty_clear
