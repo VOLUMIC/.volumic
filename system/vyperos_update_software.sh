@@ -16,7 +16,7 @@ tty_clear() {
     sudo sh -c "printf '\033[2J\033[H' > $TTY_DEV"
 }
 
-sudo service stop KlipperScreen 2>/dev/null || true
+sudo systemctl stop KlipperScreen 2>/dev/null || true
 sudo chvt $TTY_ACTIVE 2>/dev/null || true
 sudo plymouth quit --retain-splash 2>/dev/null || true
 tty_echo ""
@@ -43,8 +43,8 @@ if [ $? -eq 0 ]; then	# internet connected
 	# Update mainsail
   tty_echo "-> Mise a jour serveur Web"
 	cd /home/Volumic/mainsail
-	rm -R -f ./*
-	rm .version
+	sudo rm -R -f ./*
+	sudo rm .version
 	wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
 
 	# Update klipper
