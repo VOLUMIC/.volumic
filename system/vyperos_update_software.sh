@@ -8,15 +8,13 @@ sleep 1
 sudo plymouth quit 2>/dev/null || true
 sleep 1
 
-# Basculer sur tty1
-sudo chvt 1 2>/dev/null || true
+# Arreter getty sur tty2 si present, puis basculer sur tty2 dedie
+sudo systemctl stop getty@tty2.service 2>/dev/null || true
+sleep 1
+sudo chvt 2
 sleep 1
 
-# Arreter getty sur tty1 pour liberer le prompt login:
-sudo systemctl stop getty@tty1.service 2>/dev/null || true
-sleep 1
-
-TTY_DEV="/dev/tty1"
+TTY_DEV="/dev/tty2"
 
 # Ecriture directe - le script tourne en root via sudo bash
 tty_echo() {
