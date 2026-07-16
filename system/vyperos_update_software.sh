@@ -16,7 +16,7 @@ tty_clear() {
     sudo sh -c "printf '\033[2J\033[H' > $TTY_DEV"
 }
 
-sudo systemctl stop KlipperScreen 2>/dev/null || true
+sudo service stop KlipperScreen 2>/dev/null || true
 sudo chvt $TTY_ACTIVE 2>/dev/null || true
 sudo plymouth quit --retain-splash 2>/dev/null || true
 tty_echo ""
