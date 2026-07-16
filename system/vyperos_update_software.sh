@@ -8,20 +8,31 @@ sleep 1
 sudo plymouth quit 2>/dev/null || true
 sleep 1
 
-# Arreter getty sur tty2 si present, puis basculer sur tty2 dedie
-sudo systemctl stop getty@tty2.service 2>/dev/null || true
-sleep 1
-sudo chvt 2
+# Ouvrir un nouveau VT vierge avec openvt et y afficher les messages
+# openvt -s = switche automatiquement sur ce VT
+# openvt -w = attend la fin de la commande
+# On lance un shell qui reste ouvert et affiche les messages via /proc/self/fd/1
+FIFO=/tmp/vyper_update_fifo
+rm -f $FIFO
+mkfifo $FIFO
+
+# Lancer un afficheur sur un VT dedie en arriere plan
+sudo openvt -s -w -- bash -c "
+    clear
+    cat $FIFO
+    echo ''
+    echo '   FIN - Vous pouvez lire le resultat ci-dessus'
+    sleep 9999
+" &
+OPENVT_PID=$!
 sleep 1
 
-TTY_DEV="/dev/tty2"
-
-# Ecriture directe - le script tourne en root via sudo bash
+# Fonction d'affichage via le fifo
 tty_echo() {
-    echo "$1" > $TTY_DEV
+    echo "$1" >> $FIFO
 }
 tty_clear() {
-    printf '\033[2J\033[H' > $TTY_DEV
+    echo "" >> $FIFO
 }
 
 tty_echo ""
@@ -147,6 +158,9 @@ sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css 
 
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
+	# Fermer le fifo avant reboot
+	exec 3>$FIFO; exec 3>&-
+	rm -f $FIFO
 	reboot
 else
 	#sudo systemctl stop KlipperScreen 2>/dev/null || true
@@ -160,5 +174,7 @@ else
 	tty_echo "   Veuillez eteindre la machine electriquement"
 	tty_echo "   puis rallumez-la pour finaliser la mise a jour..."
 	tty_echo ""
+	# Fermer le fifo - le message reste affiche sur le VT grace au sleep 9999
+	exec 3>$FIFO; exec 3>&-
 	#sudo shutdown -h 0
 fi
