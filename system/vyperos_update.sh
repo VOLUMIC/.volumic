@@ -29,4 +29,4 @@ if [ $? -eq 0 ]; then	# internet connected
 
 fi
 
-sudo bash /home/Volumic/VyperOS/vyperos_update_software.sh
+sudo bash /home/Volumic/VyperOS/vyperos_update_software.sh > /home/Volumic/VyperOS/softwareupdate.log 2>&1
