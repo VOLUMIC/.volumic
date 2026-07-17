@@ -141,16 +141,16 @@ cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
 else
-	sudo systemctl stop KlipperScreen 2>/dev/null || true
-	sudo plymouth quit --retain-splash 2>/dev/null || true
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'  # efface l ecran
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
-	sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	#sudo shutdown -h 0
+	#sudo systemctl stop KlipperScreen 2>/dev/null || true
+	#sudo plymouth quit --retain-splash 2>/dev/null || true
+	#sudo sh -c 'echo "" > /dev/tty1'
+	#sudo sh -c 'echo "" > /dev/tty1'
+	#sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'  # efface l ecran
+	#sudo sh -c 'echo "" > /dev/tty1'
+	#sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
+	#sudo sh -c 'echo " " > /dev/tty1'
+	#sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
+	#sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
+	#sudo sh -c 'echo "" > /dev/tty1'
+	sudo shutdown -h 0
 fi
