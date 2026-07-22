@@ -10,7 +10,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	git clean -fd
 	git pull
 	sleep 3
-	#sudo service KlipperScreen start
-	reboot
+	sudo service KlipperScreen restart
+	#reboot
 
 fi
