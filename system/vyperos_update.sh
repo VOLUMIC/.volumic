@@ -151,6 +151,9 @@ else
 	#sudo sh -c 'echo " " > /dev/tty1'
 	#sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
 	#sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
+	#sudo sh -c 'echo " " > /dev/tty1'
+	#sudo sh -c 'echo " " > /dev/tty1'
+	#sudo sh -c 'echo "   Selon la version precedente installee, il est possible que vous ayez a relancer une 2eme fois la mise a jour si tout les modules ne le sont pas du premier coup." > /dev/tty1'
 	#sudo sh -c 'echo "" > /dev/tty1'
 	sudo shutdown -h 0
 fi

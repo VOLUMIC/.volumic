@@ -9,14 +9,14 @@ sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers
 #echo "Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/resetnetwork.sh" | sudo tee /etc/sudoers.d/vyper-resetnetwork > /dev/null
 sudo chmod 440 /etc/sudoers.d/vyper-usb
 
-# misc tasks
-cd /home/Volumic/
-sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
-cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-
 # Update system
 sudo apt update
 sudo apt upgrade -y
 
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/watermark.png /usr/share/plymouth/themes/armbian/
 sudo plymouth-set-default-theme -R armbian
+
+# misc tasks
+cd /home/Volumic/
+cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
+sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
