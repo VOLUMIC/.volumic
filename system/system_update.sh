@@ -17,6 +17,9 @@ sudo cp -f /home/Volumic/printer_data/config/.volumic/system/watermark.png /usr/
 sudo plymouth-set-default-theme -R armbian
 
 # misc tasks
-cd /home/Volumic/
 cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
+
+cd /home/Volumic/
+if [ -d "Moonraker-loader" ]; then
+	sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
+fi
