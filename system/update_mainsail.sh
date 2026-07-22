@@ -8,7 +8,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	rm -R -f ./*
 	rm .version
 	wget -q -O mainsail.zip https://github.com/mainsail-crew/mainsail/releases/latest/download/mainsail.zip && unzip mainsail.zip && rm mainsail.zip
-	#sleep 3
+	#sleep 3 
 	#reboot
 
 fi
