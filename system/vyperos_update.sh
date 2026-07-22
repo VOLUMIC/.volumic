@@ -14,25 +14,16 @@ if [ $? -eq 0 ]; then	# internet connected
 	git pull
 	cd /home/Volumic/VyperOS
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
-	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/copyusb.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/unmountusb.sh /home/Volumic/VyperOS/unmountusb.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/mountusb.sh /home/Volumic/VyperOS/mountusb.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/resetnetwork.sh /home/Volumic/VyperOS/resetnetwork.sh
+	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	sudo chmod 776 updater/*.sh
 	sudo chmod 776 *.sh
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
-
-	# Update USB Loader
-	#cd /home/Volumic/Moonraker-loader/
-	#git reset --hard
-	#git clean -fd
-	#git pull
-	#sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
-	#sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
+	cd /home/Volumic
+	if [ -d "Moonraker-loader" ]; then
+		sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
+	fi
 
 	# Update KlipperScreen
 	cd /home/Volumic/KlipperScreen
@@ -95,10 +86,6 @@ else	# no internet connexion
 
 	echo "Local update"
 	sudo service klipper stop
-
-	# Update USB Loader
-	sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
-	sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
 
 	# Update accelerometer MCU
 	cd /home/Volumic/klipper
