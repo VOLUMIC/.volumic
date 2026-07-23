@@ -2,6 +2,7 @@ Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/*.sh
 Volumic ALL=(ALL) NOPASSWD: /bin/bash /home/Volumic/VyperOS/updater/*.sh
 Volumic ALL=(ALL) NOPASSWD: /home/Volumic/VyperOS/*.sh
 Volumic ALL=(ALL) NOPASSWD: /home/Volumic/VyperOS/updater/*.sh
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/git
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/make
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/ping
 Volumic ALL=(ALL) NOPASSWD: /usr/sbin/service
