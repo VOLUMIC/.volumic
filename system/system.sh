@@ -13,6 +13,10 @@ if [ ! -d "updater" ]; then
 	mkdir updater
 	sudo chmod -R -v 776 SecureMemory
 fi
+if [ ! -d "check1" ]; then
+	mkdir check1
+	sudo chmod -R -v 776 SecureMemory
+fi
 
 cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 sudo chmod +x updater/*.sh
