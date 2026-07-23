@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	fi
 
 	echo "Internet update"
-	sudo systemctl stop klipper
+	systemctl stop klipper
 
 	# Update configurations
 	cd /home/Volumic/printer_data/config/.volumic
