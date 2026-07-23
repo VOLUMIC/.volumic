@@ -15,7 +15,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	git pull
 	cd /home/Volumic/VyperOS
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
-	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	#cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	sudo chmod 776 updater/*.sh
 	sudo chmod 776 *.sh
