@@ -26,5 +26,5 @@ if [ ! -d "sys1" ]; then
 	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update_software.sh /home/Volumic/VyperOS
 	sudo chmod +x *.sh
-	./system_update.sh > lastsysupdate.log
+	/home/Volumic/VyperOS/system_update.sh > lastsysupdate.log
 fi
