@@ -2,7 +2,7 @@
 
 cd /home/Volumic/printer_data/config/.volumic/system/
 # update repository list
-sudo cp -f sources.list /etc/apt/
+sudo cp -f /home/Volumic/printer_data/config/.volumic/system/sources.list /etc/apt/
 
 # update sudo rights
 sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb

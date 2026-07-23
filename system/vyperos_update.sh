@@ -13,8 +13,8 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
-	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
+	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	cd /home/Volumic/VyperOS
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 	#cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
