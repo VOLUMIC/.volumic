@@ -19,8 +19,8 @@ if [ $? -eq 0 ]; then	# internet connected
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
 	#cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-	sudo chmod 776 updater/*.sh
-	sudo chmod 776 *.sh
+	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
+	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
 		sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
@@ -120,10 +120,9 @@ fi
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
-
-# Update configs
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
 sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
