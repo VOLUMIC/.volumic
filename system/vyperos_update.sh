@@ -1,4 +1,5 @@
 #!/bin/bash
+{
 
 ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
 
@@ -144,3 +145,5 @@ else
 	#sudo sh -c 'echo "" > /dev/tty1'
 	sudo shutdown -h 0
 fi
+
+}
