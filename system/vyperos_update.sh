@@ -5,8 +5,14 @@ ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
 
 if [ $? -eq 0 ]; then	# internet connected
 
+	# Force system update after boot
+	cd /home/Volumic/VyperOS
+	if [ -d "sys1" ]; then
+		rmdir sys1
+	fi
+
 	echo "Internet update"
-	sudo service klipper stop
+	sudo systemctl stop klipper
 
 	# Update configurations
 	cd /home/Volumic/printer_data/config/.volumic
@@ -75,12 +81,6 @@ if [ $? -eq 0 ]; then	# internet connected
 		cd /home/Volumic/klipper/lib/hidflash
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-	fi
-
-	# Force system update after boot
-	cd /home/Volumic/VyperOS
-	if [ -d "sys1" ]; then
-		rmdir sys1
 	fi
 
 else	# no internet connexion
