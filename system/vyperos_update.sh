@@ -21,15 +21,13 @@ if [ $? -eq 0 ]; then	# internet connected
 	git pull
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
-	cd /home/Volumic/VyperOS
-	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
-	#cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
-		sudo mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
+		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 	fi
 
 	# Update KlipperScreen
@@ -63,19 +61,16 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-	cd /home/Volumic/VyperOS
+	cd /home/Volumic/klipper
 	if [ -d "SAM3X8E" ]; then
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	elif [ -d "STM32H723M8" ]; then
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
@@ -86,7 +81,7 @@ if [ $? -eq 0 ]; then	# internet connected
 else	# no internet connexion
 
 	echo "Local update"
-	sudo service klipper stop
+	systemctl stop klipper
 
 	# Update accelerometer MCU
 	cd /home/Volumic/klipper
@@ -95,19 +90,16 @@ else	# no internet connexion
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 
 	# Update MCU
-	cd /home/Volumic/VyperOS
+	cd /home/Volumic/klipper
 	if [ -d "SAM3X8E" ]; then
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	elif [ -d "STM32H723M8" ]; then
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
-		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
@@ -117,11 +109,11 @@ else	# no internet connexion
 fi
 
 # Update Mainsail images
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
+cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
+cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
 cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 
 cd /home/Volumic/VyperOS
