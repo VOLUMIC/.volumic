@@ -114,27 +114,57 @@ cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Vol
 cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
 cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
 cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
-cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
 else
-	#sudo systemctl stop KlipperScreen 2>/dev/null || true
-	#sudo plymouth quit --retain-splash 2>/dev/null || true
-	#sudo sh -c 'echo "" > /dev/tty1'
-	#sudo sh -c 'echo "" > /dev/tty1'
-	#sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'  # efface l ecran
-	#sudo sh -c 'echo "" > /dev/tty1'
-	#sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
-	#sudo sh -c 'echo " " > /dev/tty1'
-	#sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
-	#sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
-	#sudo sh -c 'echo " " > /dev/tty1'
-	#sudo sh -c 'echo " " > /dev/tty1'
-	#sudo sh -c 'echo "   Selon la version precedente installee, il est possible que vous ayez a relancer une 2eme fois la mise a jour si tout les modules ne le sont pas du premier coup." > /dev/tty1'
-	#sudo sh -c 'echo "" > /dev/tty1'
-	sudo shutdown -h 0
+	sudo systemctl stop KlipperScreen 2>/dev/null || true
+	sudo systemctl stop klipper 2>/dev/null || true
+	sudo systemctl stop moonraker 2>/dev/null || true
+	sudo plymouth quit --retain-splash 2>/dev/null || true
+	sudo sh -c 'echo "" > /dev/tty1'
+	sudo sh -c 'echo "" > /dev/tty1'
+	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'
+	sudo sh -c 'echo "" > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo "   MISE A JOUR INSTALLEE" > /dev/tty1'
+	sudo sh -c 'echo "   ---------------------" > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
+	sudo sh -c 'echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo " " > /dev/tty1'
+	sudo sh -c 'echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty1'
+	sudo sh -c 'echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty1'
+	sudo sh -c 'echo "" > /dev/tty1'
+	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	while true; do
+		sync
+		sleep 5
+	done
+	#sudo shutdown -h 1
 fi
 
 }
