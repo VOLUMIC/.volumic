@@ -121,43 +121,44 @@ else
 	sudo systemctl stop KlipperScreen 2>/dev/null || true
 	sudo systemctl stop klipper 2>/dev/null || true
 	sudo systemctl stop moonraker 2>/dev/null || true
-	sudo plymouth quit --retain-splash 2>/dev/null || true
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   MISE A JOUR INSTALLEE" > /dev/tty1'
-	sudo sh -c 'echo "   ---------------------" > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
-	sudo sh -c 'echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty1'
-	sudo sh -c 'echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
+	sudo plymouth quit 2>/dev/null || true
+	sudo chvt 3
+	echo "" > /dev/tty3
+	echo "" > /dev/tty3
+	printf "\033[2J\033[H" > /dev/tty3
+	echo "" > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo "   MISES A JOUR INSTALLEE" > /dev/tty3
+	echo "   ----------------------" > /dev/tty3
+	echo " " > /dev/tty3
+	echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
+	echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
+	echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
+	echo "" > /dev/tty3
 	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	while true; do
 		sync
