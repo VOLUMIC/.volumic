@@ -25,3 +25,4 @@ Volumic ALL=(ALL) NOPASSWD: /usr/sbin/plymouth-set-default-theme
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/rm
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/systemd-run
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/nohup
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/openvt
