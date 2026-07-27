@@ -29,6 +29,21 @@ if [ $? -eq 0 ]; then	# internet connected
 	if [ -d "Moonraker-loader" ]; then
 		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 	fi
+	CONF="/home/Volumic/printer_data/config/moonraker.conf"
+	LINE="max_upload_size = 4096"
+	AFTER="port = 7125"
+	if grep -q "max_upload_size" "$CONF"; then # Verifier si la ligne existe deja
+		echo OK
+	else
+		if ! grep -q "$AFTER" "$CONF"; then # Verifier que la ligne de reference existe
+			exit 1
+		else
+			sed -i "/$AFTER/a $LINE" "$CONF" # Inserer la ligne apres "port: 7125"
+		fi
+	fi
+	if [ ! -d "/home/Volumic/printer_data/tmp" ]; then
+		mkdir -p /home/Volumic/printer_data/tmp
+	fi
 
 	# Update KlipperScreen
 	cd /home/Volumic/KlipperScreen
