@@ -14,22 +14,18 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
+	cp -f /home/Volumic/printer_data/config/.volumic/system/moonraker.env /home/Volumic/printer_data/systemd/moonraker.env
 	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
 		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 	fi
-
 	CONF="/home/Volumic/printer_data/config/moonraker.conf"
 	LINE="max_upload_size = 4096"
 	AFTER="port = 7125"
-	if grep -q "max_upload_size" "$CONF"; then # Verifier si la ligne existe deja
-		echo OK
-	else
-		if ! grep -q "$AFTER" "$CONF"; then # Verifier que la ligne de reference existe
-			exit 1
-		else
+	if ! grep -q "max_upload_size" "$CONF"; then # Verifier si la ligne existe deja
+		if grep -q "$AFTER" "$CONF"; then # Verifier que la ligne de reference existe
 			sed -i "/$AFTER/a $LINE" "$CONF" # Inserer la ligne apres "port: 7125"
 		fi
 	fi
