@@ -1,6 +1,7 @@
 #!/bin/bash
 {
 sudo service klipper stop
+sudo service KlipperScreen stop
 ping -q -c 2 -W 3 8.8.8.8 >/dev/null 2>&1	# test if internet is connected
 if [ $? -eq 0 ]; then	# internet connected
 
