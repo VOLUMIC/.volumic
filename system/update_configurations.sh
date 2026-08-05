@@ -33,7 +33,6 @@ if [ $? -eq 0 ]; then	# internet connected
 	fi
 
 	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
-	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	sudo service klipper start
 fi
