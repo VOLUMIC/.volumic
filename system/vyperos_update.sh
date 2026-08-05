@@ -142,9 +142,9 @@ cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
 else
-	sudo systemctl stop KlipperScreen 2>/dev/null || true
 	sudo systemctl stop klipper 2>/dev/null || true
 	sudo systemctl stop moonraker 2>/dev/null || true
+	sudo systemctl stop KlipperScreen 2>/dev/null || true
 	sudo plymouth quit 2>/dev/null || true
 	sudo openvt -c 3 -s -f -- bash -c '
 		echo "" > /dev/tty3

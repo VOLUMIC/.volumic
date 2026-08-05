@@ -1,10 +1,27 @@
 #!/bin/bash
 {
-sudo service klipper stop
-sudo service KlipperScreen stop
+#sudo service klipper stop
+#sudo service KlipperScreen stop
+sudo systemctl stop klipper 2>/dev/null || true
+sudo systemctl stop moonraker 2>/dev/null || true
+sudo systemctl stop KlipperScreen 2>/dev/null || true
+sudo plymouth quit 2>/dev/null || true
+sudo openvt -c 3 -s -f -- bash -c '
+	echo "" > /dev/tty3
+	echo "" > /dev/tty3
+	printf "\033[2J\033[H" > /dev/tty3
+	echo "" > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo " " > /dev/tty3
+	echo "   MISE A JOUR EN COURS, PATIENTEZ..." > /dev/tty3
+	echo "   ----------------------------------" > /dev/tty3
+'
 ping -q -c 2 -W 3 8.8.8.8 >/dev/null 2>&1	# test if internet is connected
 if [ $? -eq 0 ]; then	# internet connected
 
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Core update" > /dev/tty3'
 	# Update klipper
 	cd /home/Volumic/klipper
 	git pull
@@ -29,11 +46,13 @@ elif [ -d "STM32H723M8" ]; then
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 else
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Accelerometer update" > /dev/tty3'
 	# Update accelerometer MCU
 	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> MCU update" > /dev/tty3'
 	# Update MCU
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
@@ -88,7 +107,6 @@ else
 		echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
 		echo "" > /dev/tty3
 	'
-	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	while true; do
 		sync
 		sleep 5

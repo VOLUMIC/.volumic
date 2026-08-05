@@ -13,10 +13,9 @@ if [ $? -eq 0 ]; then	# internet connected
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
+	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	cp -f /home/Volumic/printer_data/config/.volumic/system/moonraker.env /home/Volumic/printer_data/systemd/moonraker.env
-	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
-	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
 		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
@@ -33,6 +32,9 @@ if [ $? -eq 0 ]; then	# internet connected
 		mkdir -p /home/Volumic/printer_data/tmp
 	fi
 
+	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
+	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	sudo service klipper start
 fi
 }
