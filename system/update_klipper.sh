@@ -11,23 +11,30 @@ if [ $? -eq 0 ]; then	# internet connected
 
 fi
 
-# Update accelerometer MCU
-cd /home/Volumic/klipper
-make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
-
 # Update MCU
-cd /home/Volumic/klipper
+cd /home/Volumic/VyperOS/
 if [ -d "SAM3X8E" ]; then
+	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 elif [ -d "STM32H723M8" ]; then
+	# Update accelerometer MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+	# Update MCU
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 else
+	# Update accelerometer MCU
+	cd /home/Volumic/klipper
+	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+	# Update MCU
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 	cd /home/Volumic/klipper/lib/hidflash
