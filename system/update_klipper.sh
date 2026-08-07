@@ -64,6 +64,7 @@ else
 	cd /home/Volumic/klipper/lib/hidflash
 	./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Finished !" > /dev/tty3'
 fi
 
 cd /home/Volumic/VyperOS
