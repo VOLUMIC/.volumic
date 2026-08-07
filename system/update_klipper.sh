@@ -9,6 +9,7 @@ sudo systemctl stop klipper 2>/dev/null || true
 sudo systemctl stop moonraker 2>/dev/null || true
 sudo systemctl stop KlipperScreen 2>/dev/null || true
 sudo plymouth quit 2>/dev/null || true
+sleep 2
 sudo openvt -c 3 -s -f -- bash -c '
 	echo "" > /dev/tty3
 	echo "" > /dev/tty3
