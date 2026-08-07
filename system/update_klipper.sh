@@ -49,16 +49,18 @@ elif [ -d "STM32H723M8" ]; then
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 else
-	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Accelerometer update" > /dev/tty3'
 	# Update accelerometer MCU
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Accelerometer update" > /dev/tty3'
 	cd /home/Volumic/klipper
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Firmware flash" > /dev/tty3'
 	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
-	sudo openvt -c 3 -s -f -- bash -c 'echo " -> MCU update" > /dev/tty3'
 	# Update MCU
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> MCU update" > /dev/tty3'
 	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
+	sudo openvt -c 3 -s -f -- bash -c 'echo " -> Firmware flash" > /dev/tty3'
 	cd /home/Volumic/klipper/lib/hidflash
 	./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
