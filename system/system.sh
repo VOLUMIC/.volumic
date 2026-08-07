@@ -1,5 +1,8 @@
 #!/bin/bash
 {
+export HOME=/root
+export GIT_CONFIG_GLOBAL=/root/.gitconfig
+sudo git config --global safe.directory '*'
 
 # Check VyperOS dir
 cd /home/Volumic
