@@ -1,7 +1,7 @@
 #!/bin/bash
 {
-export HOME=/root
-export GIT_CONFIG_GLOBAL=/root/.gitconfig
+export HOME=/home/Volumic/
+export GIT_CONFIG_GLOBAL=/home/Volumic/.gitconfig
 sudo git config --global --replace-all safe.directory '*'
 
 ping -q -c 2 -W 3 8.8.8.8 >/dev/null 2>&1	# test if internet is connected

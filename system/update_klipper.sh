@@ -1,9 +1,5 @@
 #!/bin/bash
 {
-export HOME=/root
-export GIT_CONFIG_GLOBAL=/root/.gitconfig
-sudo git config --global --replace-all safe.directory '*'
-sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 
 sudo systemctl stop klipper 2>/dev/null || true
 sudo systemctl stop moonraker 2>/dev/null || true
