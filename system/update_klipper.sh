@@ -1,8 +1,11 @@
 #!/bin/bash
 {
-export HOME=/root
-export GIT_CONFIG_GLOBAL=/root/.gitconfig
-sudo git config --global --replace-all safe.directory '*'
+if [ "$(id -u)" = "0" ]; then
+    export HOME=/root
+fi
+export GIT_CONFIG_GLOBAL="${HOME}/.gitconfig"
+git config --global --replace-all safe.directory '*'
+git config --global pull.rebase false
 
 sudo systemctl stop klipper 2>/dev/null || true
 sudo systemctl stop moonraker 2>/dev/null || true
