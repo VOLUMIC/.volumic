@@ -1,4 +1,4 @@
-# Debian Bullseye (EOL) - archive
+# Debian Bullseye (EOL) - archive uniquement
 deb http://archive.debian.org/debian bullseye main contrib non-free
 deb-src http://archive.debian.org/debian bullseye main contrib non-free
 
@@ -6,6 +6,4 @@ deb-src http://archive.debian.org/debian bullseye main contrib non-free
 deb http://archive.debian.org/debian bullseye-updates main contrib non-free
 deb-src http://archive.debian.org/debian bullseye-updates main contrib non-free
 
-# Bullseye security - archive (security.debian.org ne sert plus Bullseye)
-deb http://archive.debian.org/debian-security bullseye-security main contrib non-free
-deb-src http://archive.debian.org/debian-security bullseye-security main contrib non-free
+# Note: bullseye-security n'est plus disponible (EOL depuis aout 2024)
