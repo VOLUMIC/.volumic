@@ -26,7 +26,7 @@ if [ $? -eq 0 ]; then	# internet connected
 	done
 	# Mise a jour
 	sudo apt-get update -qq
-	sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq
+	sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq --fix-missing
 	# Finaliser
 	sudo dpkg --configure -a
 	sudo apt-get install -f -y
