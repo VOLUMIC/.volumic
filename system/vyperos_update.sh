@@ -98,6 +98,12 @@ if [ $? -eq 0 ]; then	# internet connected
 		cd /home/Volumic/klipper/lib/hidflash
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+	#else # Update SV08
+		#cd /home/sovol/klipper
+		#make clean KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	fi
 
 else	# no internet connexion

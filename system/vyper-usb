@@ -30,3 +30,5 @@ Volumic ALL=(ALL) NOPASSWD: /bin/plymouth
 Volumic ALL=(ALL) NOPASSWD: /bin/systemctl stop *
 Volumic ALL=(ALL) NOPASSWD: /bin/systemctl start *
 Volumic ALL=(ALL) NOPASSWD: /bin/systemctl restart *
+Volumic ALL=(Volumic) NOPASSWD: /usr/bin/dpkg-repack
+root    ALL=(Volumic) NOPASSWD: /usr/bin/dpkg-repack
