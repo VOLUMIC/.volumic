@@ -8,6 +8,7 @@ systemctl stop KlipperScreen 2>/dev/null || true
 systemctl stop klipper 2>/dev/null || true
 sync
 plymouth quit 2>/dev/null || true
+#echo off | sudo tee /sys/devices/platform/bootsplash.0/enabled > /dev/null 2>&1 || true # pour cb1
 
 echo "" > /dev/tty1
 echo "" > /dev/tty1
