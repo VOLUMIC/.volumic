@@ -1,38 +1,49 @@
 #!/bin/bash
+{
+if [ "$(id -u)" = "0" ]; then
+    export HOME=/root
+fi
+export GIT_CONFIG_GLOBAL="${HOME}/.gitconfig"
+git config --global --replace-all safe.directory '*'
+git config --global pull.rebase false
 
-ping -q -c 2 www.google.fr >/dev/null 2>&1	# test if internet is connected
-
+ping -q -c 2 -W 3 8.8.8.8 >/dev/null 2>&1	# test if internet is connected
 if [ $? -eq 0 ]; then	# internet connected
 
+	# Force system update after boot
+	cd /home/Volumic/VyperOS
+	if [ -d "sys1" ]; then
+		rmdir sys1
+	fi
+
 	echo "Internet update"
-	sudo service klipper stop
+	systemctl stop klipper
 
 	# Update configurations
 	cd /home/Volumic/printer_data/config/.volumic
 	git reset --hard
 	git clean -fd
 	git pull
-	cd /home/Volumic/VyperOS
-	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* updater
-	cp -f /home/Volumic/printer_data/config/.volumic/system/vyperos_update.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/system_update.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/copyusb.sh /home/Volumic/VyperOS
-	cp -f /home/Volumic/printer_data/config/.volumic/system/unmountusb.sh /home/Volumic/VyperOS/unmountusb.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/mountusb.sh /home/Volumic/VyperOS/mountusb.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/resetnetwork.sh /home/Volumic/VyperOS/resetnetwork.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-	sudo chmod 776 updater/*.sh
-	sudo chmod 776 *.sh
-	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
-
-	# Update USB Loader
-	#cd /home/Volumic/Moonraker-loader/
-	#git reset --hard
-	#git clean -fd
-	#git pull
-	#sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
-	#sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
+	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
+	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
+	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
+	cp -f /home/Volumic/printer_data/config/.volumic/system/moonraker.env /home/Volumic/printer_data/systemd/moonraker.env
+	cd /home/Volumic
+	if [ -d "Moonraker-loader" ]; then
+		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
+	fi
+	CONF="/home/Volumic/printer_data/config/moonraker.conf"
+	LINE="max_upload_size: 4096"
+	AFTER="port: 7125"
+	if ! grep -q "max_upload_size" "$CONF"; then # Verifier si la ligne existe deja
+		if grep -q "$AFTER" "$CONF"; then # Verifier que la ligne de reference existe
+			sed -i "/$AFTER/a $LINE" "$CONF" # Inserer la ligne apres "port: 7125"
+		fi
+	fi
+	if [ ! -d "/home/Volumic/printer_data/tmp" ]; then
+		mkdir -p /home/Volumic/printer_data/tmp
+	fi
 
 	# Update KlipperScreen
 	cd /home/Volumic/KlipperScreen
@@ -58,68 +69,72 @@ if [ $? -eq 0 ]; then	# internet connected
 	cd /home/Volumic/moonraker-obico/
 	git pull
 
-	# Update accelerometer MCU
-	cd /home/Volumic/klipper
-	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
-
-	# Update MCU
-	cd /home/Volumic/VyperOS
+	cd /home/Volumic/VyperOS/
 	if [ -d "SAM3X8E" ]; then
 		cd /home/Volumic/klipper
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	elif [ -d "STM32H723M8" ]; then
 		cd /home/Volumic/klipper
+		# Update accelerometer MCU
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
 		cd /home/Volumic/klipper
+		# Update accelerometer MCU
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-	fi
-
-	# Force system update after boot
-	cd /home/Volumic/VyperOS
-	if [ -d "sys1" ]; then
-		rmdir sys1
+	#else # Update SV08
+		#cd /home/sovol/klipper
+		#make clean KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
+		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	fi
 
 else	# no internet connexion
 
 	echo "Local update"
-	sudo service klipper stop
+	systemctl stop klipper
 
-	# Update USB Loader
-	sudo ln -sf ~/Moonraker-loader/assets/89-moonraker-loader.rules /etc/udev/rules.d
-	sudo ln -sf ~/Moonraker-loader/assets/*.sh /usr/local/sbin
-
-	# Update accelerometer MCU
-	cd /home/Volumic/klipper
-	make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-	make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
-	sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
-
-	# Update MCU
-	cd /home/Volumic/VyperOS
+	cd /home/Volumic/VyperOS/
 	if [ -d "SAM3X8E" ]; then
 		cd /home/Volumic/klipper
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.ultralumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	elif [ -d "STM32H723M8" ]; then
+		# Update accelerometer MCU
 		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
+		# Update accelerometer MCU
 		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
+		sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
+		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
@@ -129,28 +144,65 @@ else	# no internet connexion
 fi
 
 # Update Mainsail images
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
-
-# Update configs
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
-sudo cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/icons/*.* /home/Volumic/mainsail/img/icons/
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/themes/*.* /home/Volumic/mainsail/img/themes/
+cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/mainsail/img/
+cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
+cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
 
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
 else
+	sudo systemctl stop klipper 2>/dev/null || true
+	sudo systemctl stop moonraker 2>/dev/null || true
 	sudo systemctl stop KlipperScreen 2>/dev/null || true
-	sudo plymouth quit --retain-splash 2>/dev/null || true
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'printf "\033[2J\033[H" > /dev/tty1'  # efface l ecran
-	sudo sh -c 'echo "" > /dev/tty1'
-	sudo sh -c 'echo "   MISE A JOUR INTERNET TERMINEE" > /dev/tty1'
-	sudo sh -c 'echo " " > /dev/tty1'
-	sudo sh -c 'echo "   Veuillez eteindre la machine electriquement" > /dev/tty1'
-	sudo sh -c 'echo "   puis rallumez-la pour finaliser la mise a jour..." > /dev/tty1'
-	sudo sh -c 'echo "" > /dev/tty1'
-	#sudo shutdown -h 0
+	sudo plymouth quit 2>/dev/null || true
+	sudo openvt -c 3 -s -f -- bash -c '
+		echo "" > /dev/tty3
+		echo "" > /dev/tty3
+		printf "\033[2J\033[H" > /dev/tty3
+		echo "" > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo "   MISES A JOUR INSTALLEE" > /dev/tty3
+		echo "   ----------------------" > /dev/tty3
+		echo " " > /dev/tty3
+		echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
+		echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo " " > /dev/tty3
+		echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
+		echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
+		echo "" > /dev/tty3
+	'
+	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
+	sudo chmod 776 /home/Volumic/VyperOS/*.sh
+	while true; do
+		sync
+		sleep 5
+	done
 fi
+
+}

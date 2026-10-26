@@ -24,11 +24,16 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
+	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
+	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	cp -f /home/Volumic/printer_data/config/.volumic/system/moonraker.env /home/Volumic/printer_data/systemd/moonraker.env
+	cp -f /home/Volumic/printer_data/config/.volumic/system/hyperlumic_bootloader.bin /home/Volumic/VyperOS
+	cp -f /home/Volumic/printer_data/config/.volumic/system/update_bootloader.py /home/Volumic/VyperOS
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
 		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
@@ -59,14 +64,20 @@ if [ $? -eq 0 ]; then	# internet connected
 
 	# Update klipper
 	cd /home/Volumic/klipper
+	git reset --hard
+	git clean -fd
 	git pull
 
 	# Update Moonraker
 	cd /home/Volumic/moonraker
+	git reset --hard
+	git clean -fd
 	git pull
 
 	# Update Obico
 	cd /home/Volumic/moonraker-obico/
+	git reset --hard
+	git clean -fd
 	git pull
 
 	cd /home/Volumic/VyperOS/
@@ -86,24 +97,31 @@ if [ $? -eq 0 ]; then	# internet connected
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
+	elif [ -d "STM32F103" ]; then
+		cd /home/sovol/klipper
+		make clean KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
+		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
+		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	else
-		cd /home/Volumic/klipper
+		# Update HL BOOTLOADER v3
+		cd /home/Volumic/VyperOS/
+		if [ ! -d "BL3" ]; then
+			sudo python3 /home/Volumic/VyperOS/update_bootloader.py /home/Volumic/VyperOS/hyperlumic_bootloader.bin
+			mkdir -p /home/Volumic/VyperOS/BL3
+		fi
 		# Update accelerometer MCU
+		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
 		sudo make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1:1.0
 		# Update MCU
+		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		cd /home/Volumic/klipper/lib/hidflash
 		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
-	#else # Update SV08
-		#cd /home/sovol/klipper
-		#make clean KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
-		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
-		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
-		#make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	fi
 
 else	# no internet connexion
@@ -157,52 +175,58 @@ else
 	sudo systemctl stop klipper 2>/dev/null || true
 	sudo systemctl stop moonraker 2>/dev/null || true
 	sudo systemctl stop KlipperScreen 2>/dev/null || true
-	sudo plymouth quit 2>/dev/null || true
-	sudo openvt -c 3 -s -f -- bash -c '
-		echo "" > /dev/tty3
-		echo "" > /dev/tty3
-		printf "\033[2J\033[H" > /dev/tty3
-		echo "" > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   MISES A JOUR INSTALLEE" > /dev/tty3
-		echo "   ----------------------" > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
-		echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
-		echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
-		echo "" > /dev/tty3
-	'
+	if [ ! -d "BL3" ]; then
+		sudo plymouth quit 2>/dev/null || true
+		sudo openvt -c 3 -s -f -- bash -c '
+			echo "" > /dev/tty3
+			echo "" > /dev/tty3
+			printf "\033[2J\033[H" > /dev/tty3
+			echo "" > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   MISES A JOUR INSTALLEE" > /dev/tty3
+			echo "   ----------------------" > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
+			echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
+			echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
+			echo "" > /dev/tty3
+		'
+	fi
 	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
-	while true; do
-		sync
-		sleep 5
-	done
+	if [ ! -d "BL3" ]; then
+		while true; do
+			sync
+			sleep 5
+		done
+	else
+		reboot
+	fi
 fi
 
 }

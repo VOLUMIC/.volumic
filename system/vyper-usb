@@ -20,6 +20,7 @@ Volumic ALL=(ALL) NOPASSWD: /usr/bin/nohup
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/openvt
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/timedatectl
 Volumic ALL=(ALL) NOPASSWD: /usr/bin/nmcli
+Volumic ALL=(ALL) NOPASSWD: /usr/bin/python3
 Volumic ALL=(ALL) NOPASSWD: /usr/sbin/service
 Volumic ALL=(ALL) NOPASSWD: /usr/sbin/shutdown
 Volumic ALL=(ALL) NOPASSWD: /usr/sbin/reboot
