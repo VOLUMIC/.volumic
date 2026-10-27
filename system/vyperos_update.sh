@@ -175,6 +175,11 @@ if t != s:
     print("printer.cfg : DOOR_DETECT corrige")
 PYEOF
 
+# Auto-reparation des totaux d'historique NULL (base livree en mars 2025) : sinon Moonraker plante a chaque fin d'impression
+if curl -s -f -m 10 "http://127.0.0.1:7125/server/history/totals" | python3 -c 'import sys, json; t = json.load(sys.stdin)["result"]["job_totals"]; sys.exit(0 if any(v is None for v in t.values()) else 1)' 2>/dev/null; then
+	curl -s -f -m 30 -X POST "http://127.0.0.1:7125/server/history/reset_totals" >/dev/null 2>&1 && echo "Historique : totaux NULL reinitialises"
+fi
+
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
