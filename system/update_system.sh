@@ -14,7 +14,9 @@ if [ $? -eq 0 ]; then	# internet connected
 	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
 	sudo chmod +x /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod +x /home/Volumic/VyperOS/*.sh
-	sudo chmod 666 /home/Volumic/printer_data/database/moonraker-sql.db
+	# Base Moonraker : proprietaire Volumic, lecture/ecriture pour lui seul (plus de 666)
+	sudo chown Volumic:Volumic /home/Volumic/printer_data/database/moonraker-sql.db* 2>/dev/null || true
+	sudo chmod 644 /home/Volumic/printer_data/database/moonraker-sql.db* 2>/dev/null || true
 
 	# update repository list
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/sources.list /etc/apt/
