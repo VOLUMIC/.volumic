@@ -72,11 +72,17 @@ if [ $? -eq 0 ]; then	# internet connected
 	git clean -fd
 	git pull
 
-	# Update Obico
-	cd /home/Volumic/moonraker-obico/
-	git reset --hard
-	git clean -fd
-	git pull
+	# Update Obico (si installe) : code, dependances Python, fichiers rendus a Volumic (le script tourne en root)
+	if [ -d "/home/Volumic/moonraker-obico/.git" ]; then
+		cd /home/Volumic/moonraker-obico/
+		git reset --hard
+		git clean -fd
+		git pull
+		if [ -x /home/Volumic/moonraker-obico-env/bin/pip ] && [ -f requirements.txt ]; then
+			/home/Volumic/moonraker-obico-env/bin/pip install -q -r requirements.txt
+		fi
+		chown -R Volumic:Volumic /home/Volumic/moonraker-obico /home/Volumic/moonraker-obico-env 2>/dev/null || true
+	fi
 
 	cd /home/Volumic/VyperOS/
 	if [ -d "SAM3X8E" ]; then
