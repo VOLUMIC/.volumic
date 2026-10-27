@@ -15,5 +15,6 @@
 cd ~/klipper
 make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-cd ~/klipper/lib/hidflash
-./hid-flash ~/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+# Flash par la copie VyperOS (repli sur la copie du depot, lancee par bash : pas besoin du droit d'execution)
+HFS=/home/Volumic/VyperOS/hidflash_safe.sh; [ -f "$HFS" ] || HFS=/home/Volumic/printer_data/config/.volumic/system/hidflash_safe.sh
+bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0

@@ -117,8 +117,9 @@ if [ $? -eq 0 ]; then	# internet connected
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-		cd /home/Volumic/klipper/lib/hidflash
-		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+		# Flash par la copie VyperOS (repli sur la copie du depot, lancee par bash : pas besoin du droit d'execution)
+		HFS=/home/Volumic/VyperOS/hidflash_safe.sh; [ -f "$HFS" ] || HFS=/home/Volumic/printer_data/config/.volumic/system/hidflash_safe.sh
+		bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
@@ -153,8 +154,9 @@ else	# no internet connexion
 		# Update MCU
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
-		cd /home/Volumic/klipper/lib/hidflash
-		./hid-flash /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+		# Flash par la copie VyperOS (repli sur la copie du depot, lancee par bash : pas besoin du droit d'execution)
+		HFS=/home/Volumic/VyperOS/hidflash_safe.sh; [ -f "$HFS" ] || HFS=/home/Volumic/printer_data/config/.volumic/system/hidflash_safe.sh
+		bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
 fi
