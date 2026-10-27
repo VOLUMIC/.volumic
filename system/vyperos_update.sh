@@ -160,6 +160,21 @@ cp -f /home/Volumic/printer_data/config/.volumic/system/img/*.* /home/Volumic/ma
 cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config
 cp -f /home/Volumic/printer_data/config/.volumic/system/mainsail_style.css /home/Volumic/printer_data/config/.theme/custom.css
 
+# Correctif DOOR_DETECT : retire le "gcode:" vide sous variable_dooractive dans printer.cfg (anciens modeles EXO42 P / IDRE)
+python3 - /home/Volumic/printer_data/config/printer.cfg <<'PYEOF' || true
+import re, sys
+p = sys.argv[1]
+try:
+    s = open(p, encoding='utf-8', newline='').read()
+except OSError:
+    sys.exit(0)
+t = re.sub(r'(\[gcode_macro DOOR_DETECT\][ \t]*\r?\nvariable_dooractive:[^\r\n]*\r?\n)gcode:[ \t]*\r?\n(?![ \t]+\S)', r'\1', s)
+if t != s:
+    open(p + '.bak_door', 'w', encoding='utf-8', newline='').write(s)
+    open(p, 'w', encoding='utf-8', newline='').write(t)
+    print("printer.cfg : DOOR_DETECT corrige")
+PYEOF
+
 cd /home/Volumic/VyperOS
 if [ -d "SAM3X8E" ]; then
 	reboot
