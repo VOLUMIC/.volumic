@@ -17,29 +17,17 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
-	sudo cp /home/Volumic/printer_data/config/.volumic/system/vyper-usb /etc/sudoers.d/vyper-usb
-	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/90-usb.rules /etc/udev/rules.d/90-usb.rules
 	cp -u -f /home/Volumic/printer_data/config/.volumic/updater/*.* /home/Volumic/VyperOS/updater
 	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
-	cp -f /home/Volumic/printer_data/config/.volumic/system/KlipperScreen.conf /home/Volumic/printer_data/config/KlipperScreen.conf
-	cp -f /home/Volumic/printer_data/config/.volumic/system/moonraker.env /home/Volumic/printer_data/systemd/moonraker.env
+	HKS=/home/Volumic/VyperOS/ksconf_merge.sh; [ -f "$HKS" ] || HKS=/home/Volumic/printer_data/config/.volumic/system/ksconf_merge.sh; bash "$HKS"  # KlipperScreen.conf : menus du depot + reglages client conserves
 	cd /home/Volumic
 	if [ -d "Moonraker-loader" ]; then
 		mv /home/Volumic/Moonraker-loader /home/Volumic/Moonraker-loader.old
 	fi
-	CONF="/home/Volumic/printer_data/config/moonraker.conf"
-	LINE="max_upload_size: 4096"
-	AFTER="port: 7125"
-	if ! grep -q "max_upload_size" "$CONF"; then # Verifier si la ligne existe deja
-		if grep -q "$AFTER" "$CONF"; then # Verifier que la ligne de reference existe
-			sed -i "/$AFTER/a $LINE" "$CONF" # Inserer la ligne apres "port: 7125"
-		fi
-	fi
-	if [ ! -d "/home/Volumic/printer_data/tmp" ]; then
-		mkdir -p /home/Volumic/printer_data/tmp
-	fi
 
 	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+	# Fichiers systeme et migrations (system_files.list, system/migrations/) depuis le depot a jour
+	bash /home/Volumic/printer_data/config/.volumic/system/system_update.sh --files
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
 	sudo service klipper start
 fi

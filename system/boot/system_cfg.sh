@@ -1,7 +1,9 @@
 #!/bin/bash
 
 SYSTEM_CFG_PATH="/boot/system.cfg"
-source ${SYSTEM_CFG_PATH}
+# VOLUMIC : ne charge que les lignes VARIABLE=valeur (une ligne inattendue, ex. "hdmi_cvt ...",
+# ne provoque plus d'erreur) et ignore les fins de ligne Windows (fichier modifiable depuis un PC)
+source <(grep -E '^[[:space:]]*[A-Za-z_][A-Za-z0-9_]*=' "${SYSTEM_CFG_PATH}" | tr -d '\r')
 
 grep -e "^hostname" ${SYSTEM_CFG_PATH} > /dev/null
 STATUS=$?

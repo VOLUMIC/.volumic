@@ -1,0 +1,24 @@
+# =============================================================================
+# VyperOS - fichiers systeme installes sur les machines par system_update.sh
+#
+# REGLE : toute modification d'un fichier systeme, de demarrage ou de configuration
+# situe hors de ~/VyperOS et de .volumic se fait ICI (fichier dans le depot + ligne
+# dans cette liste), jamais a la main sur une machine. system_update.sh l'applique
+# au demarrage, sur toutes les machines, des que cette partie du depot change.
+# Pour modifier un fichier propre a chaque machine (ex. /boot/system.cfg) :
+# un script dans system/migrations/ (execute une seule fois par machine).
+#
+# source (relative a .volumic/system) | destination | droits | proprietaire | action
+# action apres changement : sudoers (verifie par visudo avant installation),
+# udev (rechargement des regles), plymouth (theme de demarrage regenere),
+# systemd (daemon-reload)
+# =============================================================================
+vyper-usb             | /etc/sudoers.d/vyper-usb                          | 0440 | root:root       | sudoers
+90-usb.rules          | /etc/udev/rules.d/90-usb.rules                    | 0644 | root:root       | udev
+99-stm32_hid_bl.rules | /etc/udev/rules.d/99-stm32_hid_bl.rules           | 0644 | root:root       | udev
+sources.list          | /etc/apt/sources.list                             | 0644 | root:root       |
+watermark.png         | /usr/share/plymouth/themes/armbian/watermark.png  | 0644 | root:root       | plymouth
+moonraker.env         | /home/Volumic/printer_data/systemd/moonraker.env  | 0644 | Volumic:Volumic |
+boot/btt_init.sh      | /boot/scripts/btt_init.sh                         | 0755 | root:root       |
+boot/system_cfg.sh    | /boot/scripts/system_cfg.sh                       | 0755 | root:root       |
+boot/sync.sh          | /boot/scripts/sync.sh                             | 0755 | root:root       |
