@@ -49,7 +49,14 @@ install_system_files() {
 	for post in $changed; do
 		case "$post" in
 			udev) udevadm control --reload-rules && udevadm trigger ;;
-			plymouth) plymouth-set-default-theme -R armbian ;;
+			plymouth)
+				# Theme en cours conserve (ex. volumic-inverse des ULTRA Performance, regenere avec le nouveau logo)
+				THEME=$(plymouth-set-default-theme 2>/dev/null)
+				if [ "$THEME" = "volumic-inverse" ] && [ -f "$SYS/ecran_ultra_perf.sh" ]; then
+					bash "$SYS/ecran_ultra_perf.sh" theme
+				else
+					plymouth-set-default-theme -R "${THEME:-armbian}"
+				fi ;;
 			systemd) systemctl daemon-reload ;;
 		esac
 	done
