@@ -95,6 +95,10 @@ if [ $? -eq 0 ]; then	# internet connected
 		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
 		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	else
+		# Bootloader Hyperlumic v2 (une seule fois, image verifiee, ecriture relue, reprises auto) : bootloader_hyperlumic.sh
+		bash /home/Volumic/printer_data/config/.volumic/system/bootloader_hyperlumic.sh
+		BLRC=$?
+		[ "$BLRC" = "3" ] && touch /tmp/vyperos_bootloader_failed
 		# Update accelerometer MCU
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
@@ -106,7 +110,8 @@ if [ $? -eq 0 ]; then	# internet connected
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		# Flash par la copie VyperOS (repli sur la copie du depot, lancee par bash : pas besoin du droit d'execution)
 		HFS=/home/Volumic/VyperOS/hidflash_safe.sh; [ -f "$HFS" ] || HFS=/home/Volumic/printer_data/config/.volumic/system/hidflash_safe.sh
-		bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+		# Pas de flash de Klipper si l'ecriture du bootloader a echoue (carte restee en mode DFU)
+		[ "$BLRC" = "3" ] || bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 		# make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic flash FLASH_DEVICE=/dev/serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
@@ -133,6 +138,10 @@ else	# no internet connexion
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	else
+		# Bootloader Hyperlumic v2 (une seule fois, image verifiee, ecriture relue, reprises auto) : bootloader_hyperlumic.sh
+		bash /home/Volumic/printer_data/config/.volumic/system/bootloader_hyperlumic.sh
+		BLRC=$?
+		[ "$BLRC" = "3" ] && touch /tmp/vyperos_bootloader_failed
 		# Update accelerometer MCU
 		cd /home/Volumic/klipper
 		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.acc
@@ -143,7 +152,8 @@ else	# no internet connexion
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.hyperlumic
 		# Flash par la copie VyperOS (repli sur la copie du depot, lancee par bash : pas besoin du droit d'execution)
 		HFS=/home/Volumic/VyperOS/hidflash_safe.sh; [ -f "$HFS" ] || HFS=/home/Volumic/printer_data/config/.volumic/system/hidflash_safe.sh
-		bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
+		# Pas de flash de Klipper si l'ecriture du bootloader a echoue (carte restee en mode DFU)
+		[ "$BLRC" = "3" ] || bash "$HFS" /home/Volumic/klipper/out/klipper.bin serial/by-path/platform-fd840000.usb-usb-0:1:1.0
 	fi
 
 fi
@@ -182,52 +192,81 @@ else
 	sudo systemctl stop klipper 2>/dev/null || true
 	sudo systemctl stop moonraker 2>/dev/null || true
 	sudo systemctl stop KlipperScreen 2>/dev/null || true
-	sudo plymouth quit 2>/dev/null || true
-	sudo openvt -c 3 -s -f -- bash -c '
-		echo "" > /dev/tty3
-		echo "" > /dev/tty3
-		printf "\033[2J\033[H" > /dev/tty3
-		echo "" > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   MISES A JOUR INSTALLEE" > /dev/tty3
-		echo "   ----------------------" > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
-		echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo " " > /dev/tty3
-		echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
-		echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
-		echo "" > /dev/tty3
-	'
+	if [ -f /tmp/vyperos_bootloader_failed ]; then
+		# Bootloader pas encore ecrit : la carte reste alimentee (donc en mode DFU) pendant
+		# le redemarrage, et system.sh relance l'ecriture au demarrage (bootloader_hyperlumic.sh resume)
+		cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
+		sudo plymouth quit 2>/dev/null || true
+		sudo openvt -c 3 -s -f -- bash -c '
+			printf "\033[2J\033[H" > /dev/tty3
+			echo "" > /dev/tty3
+			echo "   FINALISATION DE LA MISE A JOUR" > /dev/tty3
+			echo "   ------------------------------" > /dev/tty3
+			echo "" > /dev/tty3
+			echo "   La machine va redemarrer automatiquement pour terminer" > /dev/tty3
+			echo "   la mise a jour de la carte electronique." > /dev/tty3
+			echo "" > /dev/tty3
+		'
+		sync
+		sleep 5
+		reboot
+		exit 0
+	fi
+	if [ ! -d "BL3" ]; then
+		sudo plymouth quit 2>/dev/null || true
+		sudo openvt -c 3 -s -f -- bash -c '
+			echo "" > /dev/tty3
+			echo "" > /dev/tty3
+			printf "\033[2J\033[H" > /dev/tty3
+			echo "" > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   MISES A JOUR INSTALLEE" > /dev/tty3
+			echo "   ----------------------" > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   Veuillez eteindre la machine electriquement" > /dev/tty3
+			echo "   puis rallumez-la pour finaliser la configuration..." > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo " " > /dev/tty3
+			echo "   Après redémarrage, si toutes les mise à jour ne se sont pas installé," > /dev/tty3
+			echo "   relancez une deuxième fois la mise à jour complète si necessaire." > /dev/tty3
+			echo "" > /dev/tty3
+		'
+	fi
 	cp -f /home/Volumic/printer_data/config/.volumic/system/*.sh /home/Volumic/VyperOS
 	sudo chmod 776 /home/Volumic/VyperOS/updater/*.sh
 	sudo chmod 776 /home/Volumic/VyperOS/*.sh
-	while true; do
+	if [ ! -d "BL3" ]; then
+		# Ancien bootloader : extinction electrique necessaire
+		while true; do
+			sync
+			sleep 5
+		done
+	else
+		# Bootloader v3 : simple redemarrage
 		sync
-		sleep 5
-	done
+		reboot
+	fi
 fi
 
 }

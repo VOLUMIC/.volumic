@@ -12,11 +12,14 @@
 #  - ecran de demarrage (logo VOLUMIC + animation) : theme plymouth "volumic-inverse"
 #    (images du theme armbian tournees de 180 degres, positions inversees)
 #  - logo u-boot (/boot/boot.bmp) et textes de la console : fbcon=rotate:2
-# Mode interne "theme" : regenere seulement le theme inverse (appele par
-# system_update.sh quand le logo de demarrage change).
+# Modes internes :
+#  - "theme"    : regenere seulement le theme inverse (appele par system_update.sh)
+#  - "verifier" : lance a chaque demarrage par system.sh ; si l'ecran est declare
+#    inverse dans /boot/system.cfg (ks_angle="inverted"), remet ce qu'une mise a jour
+#    aurait annule (theme de demarrage, logo u-boot, console). Ne fait rien sinon.
 # =============================================================================
 MODE="${1:-inverted}"
-case "$MODE" in normal|inverted|theme) ;; *) echo "Usage : $0 [inverted|normal]"; exit 2 ;; esac
+case "$MODE" in normal|inverted|theme|verifier) ;; *) echo "Usage : $0 [inverted|normal]"; exit 2 ;; esac
 if [ "$(id -u)" != "0" ]; then echo "A lancer avec sudo"; exit 1; fi
 CFG=/boot/system.cfg
 ENV=/boot/armbianEnv.txt
@@ -47,20 +50,48 @@ PYEOF
 }
 
 # --- Logo u-boot : rotation de 180 degres (sauvegarde boot.bmp.normal) ---
+# L'empreinte du logo tourne est gardee dans boot.bmp.inverse.sha256 : si un paquet
+# remplace /boot/boot.bmp, le nouveau logo devient le logo normal et il est retourne.
 rotate_bootlogo() {
 	local want="$1"
 	[ -f /boot/boot.bmp ] || return 0
 	[ -f /boot/boot.bmp.normal ] || cp -f /boot/boot.bmp /boot/boot.bmp.normal
 	if [ "$want" = "inverted" ]; then
-		python3 -c "from PIL import Image; im=Image.open('/boot/boot.bmp.normal'); im.rotate(180).save('/boot/boot.bmp', format='BMP')"
+		python3 -c "from PIL import Image; im=Image.open('/boot/boot.bmp.normal'); im.rotate(180).save('/boot/boot.bmp', format='BMP')" \
+			&& sha256sum /boot/boot.bmp | cut -d' ' -f1 > /boot/boot.bmp.inverse.sha256
 	else
 		cp -f /boot/boot.bmp.normal /boot/boot.bmp
+		rm -f /boot/boot.bmp.inverse.sha256
 	fi
 }
 
 if [ "$MODE" = "theme" ]; then
 	build_theme && plymouth-set-default-theme -R "$INV"
 	exit $?
+fi
+
+if [ "$MODE" = "verifier" ]; then
+	grep -qE '^ks_angle="?inverted"?' "$CFG" 2>/dev/null || exit 0
+	LOG=/home/Volumic/VyperOS/ecran_ultra_perf.log
+	if [ "$(plymouth-set-default-theme 2>/dev/null)" != "$INV" ] || [ ! -f "$THEMES/$INV/$INV.plymouth" ]; then
+		echo "$(date '+%F %T') theme de demarrage remis en $INV" >> "$LOG"
+		build_theme && plymouth-set-default-theme -R "$INV"
+	fi
+	if [ -f /boot/boot.bmp ] && [ "$(sha256sum /boot/boot.bmp | cut -d' ' -f1)" != "$(cat /boot/boot.bmp.inverse.sha256 2>/dev/null)" ]; then
+		echo "$(date '+%F %T') logo u-boot retourne" >> "$LOG"
+		# logo remplace par une mise a jour (ou jamais retourne) : il devient le logo normal
+		if [ -f /boot/boot.bmp.inverse.sha256 ] || [ ! -f /boot/boot.bmp.normal ]; then cp -f /boot/boot.bmp /boot/boot.bmp.normal; fi
+		rotate_bootlogo inverted
+	fi
+	if ! grep -qE '^extraargs=.*fbcon=rotate:2' "$ENV"; then
+		echo "$(date '+%F %T') console retournee (fbcon=rotate:2)" >> "$LOG"
+		if grep -q '^extraargs=' "$ENV"; then
+			sed -i -E 's/^extraargs=(.*)$/extraargs=\1 fbcon=rotate:2/; s/^extraargs= /extraargs=/' "$ENV"
+		else
+			echo "extraargs=fbcon=rotate:2" >> "$ENV"
+		fi
+	fi
+	exit 0
 fi
 
 # --- KlipperScreen : system.cfg + system_cfg.sh ---
