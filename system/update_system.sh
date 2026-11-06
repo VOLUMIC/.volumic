@@ -34,9 +34,13 @@ if [ $? -eq 0 ]; then	# internet connected
 	while sudo fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
 		sleep 1
 	done
-	# update splash
+	# update splash (ecran 5 pouces inverse des VS30 ULTRA Performance : theme inverse conserve)
 	sudo cp -f /home/Volumic/printer_data/config/.volumic/system/watermark.png /usr/share/plymouth/themes/armbian/
-	sudo plymouth-set-default-theme -R armbian
+	if grep -qE '^ks_angle="?inverted"?' /boot/system.cfg 2>/dev/null; then
+		sudo bash /home/Volumic/printer_data/config/.volumic/system/ecran_ultra_perf.sh theme
+	else
+		sudo plymouth-set-default-theme -R armbian
+	fi
 
 fi
 }
