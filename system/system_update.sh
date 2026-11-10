@@ -41,4 +41,22 @@ if grep -qE '^ks_angle="?inverted"?' /boot/system.cfg 2>/dev/null; then
 else
 	sudo plymouth-set-default-theme -R armbian
 fi
+# Timelapse (10/11/2026) : le composant Moonraker est un lien vers ~/moonraker-timelapse, supprime par le
+# git clean des anciennes mises a jour (avertissement « section [timelapse] non analysee » ou timelapse absent).
+# Recree le lien, ajoute la section [timelapse] a moonraker.conf si elle manque (timelapse desactive par defaut).
+TL_SRC=/home/Volumic/moonraker-timelapse/component/timelapse.py
+TL_DST=/home/Volumic/moonraker/moonraker/components/timelapse.py
+TL_CONF=/home/Volumic/printer_data/config/moonraker.conf
+if [ -f "$TL_SRC" ] && [ -d /home/Volumic/moonraker/moonraker/components ]; then
+	TL_CHANGE=0
+	if [ "$(readlink "$TL_DST")" != "$TL_SRC" ]; then
+		sudo ln -sfn "$TL_SRC" "$TL_DST" && sudo chown -h Volumic:Volumic "$TL_DST" && TL_CHANGE=1
+	fi
+	if [ -f "$TL_CONF" ] && ! grep -q '^\[timelapse\]' "$TL_CONF"; then
+		printf '\n[timelapse]\noutput_path: ~/timelapse/\nffmpeg_binary_path: /usr/bin/ffmpeg\nenabled: False\nparkhead: True\npark_travel_speed: 500\nautorender: True\n' | sudo tee -a "$TL_CONF" >/dev/null
+		sudo chown Volumic:Volumic "$TL_CONF"; TL_CHANGE=1
+	fi
+	sudo mkdir -p /home/Volumic/timelapse && sudo chown Volumic:Volumic /home/Volumic/timelapse
+	[ "$TL_CHANGE" = 1 ] && sudo systemctl restart moonraker
+fi
 }

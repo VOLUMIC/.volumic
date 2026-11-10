@@ -71,6 +71,11 @@ if [ $? -eq 0 ]; then	# internet connected
 	git reset --hard
 	git clean -fd
 	git pull
+	# Timelapse : le composant est un lien vers ~/moonraker-timelapse, supprime par le git clean ci-dessus -> recree
+	if [ -f /home/Volumic/moonraker-timelapse/component/timelapse.py ]; then
+		ln -sfn /home/Volumic/moonraker-timelapse/component/timelapse.py /home/Volumic/moonraker/moonraker/components/timelapse.py
+		chown -h Volumic:Volumic /home/Volumic/moonraker/moonraker/components/timelapse.py
+	fi
 
 	# Update Obico (si installe) : code, dependances Python, fichiers rendus a Volumic (le script tourne en root)
 	if [ -d "/home/Volumic/moonraker-obico/.git" ]; then
