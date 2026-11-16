@@ -107,11 +107,11 @@ if [ $? -eq 0 ]; then	# internet connected
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta
 		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.manta flash FLASH_DEVICE=/dev/serial/by-path/platform-xhci-hcd.4.auto-usb-0:1.4:1.0
 	elif [ -d "STM32F103" ]; then
-		cd /home/sovol/klipper
-		make clean KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
-		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103
-		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
-		make KCONFIG_CONFIG=/home/sovol/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
+		cd /home/Volumic/klipper
+		make clean KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.f103
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.f103
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5101400.usb-usb-0:1:1.0
+		make KCONFIG_CONFIG=/home/Volumic/VyperOS/updater/config.f103 flash FLASH_DEVICE=/dev/serial/by-path/platform-5200400.usb-usb-0:1:1.0
 	else
 		# Update accelerometer MCU
 		cd /home/Volumic/klipper
@@ -191,8 +191,17 @@ if curl -s -f -m 10 "http://127.0.0.1:7125/server/history/totals" | python3 -c '
 	curl -s -f -m 30 -X POST "http://127.0.0.1:7125/server/history/reset_totals" >/dev/null 2>&1 && echo "Historique : totaux NULL reinitialises"
 fi
 
+# Fin selon la carte : redemarrage normal pour toutes (Ultralumic, Manta, SV08 STM32F103,
+# Hyperlumic avec le bootloader v2 = repere BL3), sauf l'Hyperlumic avec l'ancien
+# bootloader (v1) qui ne redemarre pas seule et doit etre eteinte electriquement
 cd /home/Volumic/VyperOS
-if [ -d "SAM3X8E" ]; then
+HYPERLUMIC=1
+for m in SAM3X8E STM32H723M8 STM32F103; do
+	[ -d "$m" ] && HYPERLUMIC=0
+done
+if [ $HYPERLUMIC -eq 0 ] || [ -d "BL3" ]; then
+	sync
+	sleep 2
 	reboot
 else
 	sudo systemctl stop klipper 2>/dev/null || true
